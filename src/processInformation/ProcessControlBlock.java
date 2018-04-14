@@ -1,17 +1,21 @@
 package processInformation;
 
 public class ProcessControlBlock {
-	int pID;
-	int arrivalTime;
-	int burstTime;
-	int priority;
-	int cpuPreemptionCounter;
+	private	int pID;
+	private	int arrivalTime;
+	private	int burstTime;
+	private	int priority;
+	private	int cpuPreemptionCounter;
 	
 	public ProcessControlBlock(int pID, int arrivalTime, int burstTime, int priority){
 		this.pID = pID;
 		this. arrivalTime = arrivalTime;
 		this.burstTime = burstTime;
 		this.priority = priority;
+	}
+	
+	public void incCPUPreempCounter() {
+		cpuPreemptionCounter++;
 	}
 	
 	public int getPID(){
@@ -44,6 +48,11 @@ public class ProcessControlBlock {
 	
 	public void setPriority(int priority){
 		this.priority = priority;
+	}
+	
+	public Integer getArrivalTimeInInteger() {
+		Integer in = new Integer(arrivalTime);
+		return in;
 	}
 	
 	
