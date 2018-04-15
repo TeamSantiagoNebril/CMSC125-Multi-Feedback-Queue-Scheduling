@@ -1,6 +1,7 @@
 import processInformation.ProcessControlBlock;
 import classicalSchedulingAlgorithms.FCFS;
 import classicalSchedulingAlgorithms.NPPriority;
+import classicalSchedulingAlgorithms.Priority;
 
 import java.util.Random;
 import java.util.ArrayList;
@@ -12,9 +13,9 @@ public class Main extends Thread{
 		int pID[]= {1, 2, 3, 4, 5, 6, 7};
 		int arrivalTime[] = {33, 25, 41, 26, 36, 0, 7};
 		int burstTime[] = {6, 39, 14, 10, 42, 39, 48};
-		int priority[] = {15, 20, 9, 7, 8, 8, 17};
+		int priority[] = {15, 20, 9, 7, 8, 25, 17};
 		
-		NPPriority schedAlgo = new NPPriority();
+		Priority schedAlgo = new Priority();
 		
 		for(int a = 0; a < 7; a++){							//for randomizing pa ini, in the mean time, let's settle for 7 laanay para masayon pagcheck
 			ProcessControlBlock process = new ProcessControlBlock(pID[a], arrivalTime[a], burstTime[a], priority[a]);	
