@@ -4,7 +4,6 @@ public class GanttChartElement {
 	
 	private int PID;
 
-
 	private int beginTime;
 	private int EndTime;
 	

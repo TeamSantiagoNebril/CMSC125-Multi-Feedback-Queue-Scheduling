@@ -9,43 +9,37 @@ public class SJF{
 	private Boolean running = true;
 	private int totalBurstTime;
 	private boolean endSignal;
+	private boolean executingProcess;
 	private ArrayList<ProcessControlBlock> arrivedProcesses = new ArrayList<ProcessControlBlock>();
 	public void execute(){
 		int time;
-		while(running){
-			if(arrivedProcesses.size() != 0 || processes.size() != 0){
-				while(true){
-					if(processes.size() != 0 && processes.get(0).getArrivalTime() <= totalBurstTime ){
-						arrangeArrivedProcesses(processes.get(0));
-						processes.remove(0);
-					}else{
-						break;
-					}
-				}
-				if(arrivedProcesses.size() != 0){
-					System.out.println("Process: " + arrivedProcesses.get(0).getPID());
-					while(arrivedProcesses.get(0).getBurstTime() != 0){
-						time = arrivedProcesses.get(0).getBurstTime()-1;
-						arrivedProcesses.get(0).setBurstTime(time);
-						totalBurstTime++;
-						
-					}
-					arrivedProcesses.remove(0);
-				}else{
-					totalBurstTime++;
-				}
-			}else{
-				break;
+		if(arrivedProcesses.size() != 0){
+			executingProcess = true;
+			System.out.println("Process: " + arrivedProcesses.get(0).getPID());
+			time = arrivedProcesses.get(0).getBurstTime()-1;
+			arrivedProcesses.get(0).setBurstTime(time);
+			totalBurstTime++;
+			
+			if(arrivedProcesses.get(0).getBurstTime() == 0){
+				executingProcess = false;
+				arrivedProcesses.remove(0);
 			}
+		}else{
+			totalBurstTime++;
 		}
-		System.out.println("Total: " + totalBurstTime);	
 	}
 	
-	public void arrangeArrivedProcesses(ProcessControlBlock process){
+	public void addProcess(ProcessControlBlock process){
 		
 		arrivedProcesses.add(process);
+		int a;
+		if(executingProcess){
+			a = 1;
+		}else{
+			a = 0;
+		}
 		
-		for(int a = 0; a < arrivedProcesses.size(); a++){
+		for(; a < arrivedProcesses.size(); a++){
 			if((process.getBurstTime() < arrivedProcesses.get(a).getBurstTime()) ){
 				for(int b = arrivedProcesses.size() - 1; b >= a + 1 ; b--){
 					arrivedProcesses.set(b, arrivedProcesses.get(b-1));
@@ -56,18 +50,18 @@ public class SJF{
 		}
 	}
 	
-	public void addProcess(ProcessControlBlock process){
-		processes.add(process);
-		
-		for(int a = 0; a < processes.size(); a++){
-			if((process.getArrivalTime() < processes.get(a).getArrivalTime()) && processes.size() > 1){
-				for(int b = processes.size() - 1; b >= a + 1 ; b--){
-					processes.set(b, processes.get(b-1));
-				}
-				processes.set(a, process);
-				break;
-			}
+	public ProcessControlBlock removeProcess(int a){
+		ProcessControlBlock proc = arrivedProcesses.get(a);
+		arrivedProcesses.remove(a);
+		return proc;
+	}
+	
+	public boolean isProcessing(){
+		if(arrivedProcesses.size() != 0){
+			return true;
 		}
+		
+		return false;
 	}
 	
 	public void signalToEnd(){
