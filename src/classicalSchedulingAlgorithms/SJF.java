@@ -1,7 +1,9 @@
 package classicalSchedulingAlgorithms;
 
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 
+import processInformation.GanttChartElement;
 import processInformation.ProcessControlBlock;
 
 public class SJF{
@@ -24,6 +26,7 @@ public class SJF{
 				executingProcess = false;
 				arrivedProcesses.remove(0);
 			}
+			
 		}else{
 			totalBurstTime++;
 		}
@@ -70,5 +73,9 @@ public class SJF{
 	
 	public void stop_thread(){
 		running = false;
+	}
+	
+	public static void executeAlgorithm(PriorityQueue<ProcessControlBlock> queue, ArrayList<GanttChartElement> ganttChart) {
+		
 	}
 }

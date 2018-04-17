@@ -3,6 +3,7 @@ package classicalSchedulingAlgorithms;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.PriorityQueue;
 
 import processInformation.GanttChartElement;
 import processInformation.ProcessControlBlock;
@@ -68,10 +69,14 @@ public class RoundRobinScheduling {
 	public void addProcess(ProcessControlBlock process){
 		processes.add(process);
 		totalBurstTime += process.getBurstTime();
-		Collections.sort(processes, new Comparator<ProcessControlBlock>() { //Sort according to arrivalTime
+		/*Collections.sort(processes, new Comparator<ProcessControlBlock>() { //Sort according to arrivalTime
 		    public int compare(ProcessControlBlock one, ProcessControlBlock other) {
 		        return one.getArrivalTimeInInteger().compareTo(other.getArrivalTime());
 		    }
-		});
+		});*/
+	}
+	
+	public static void executeAlgorithm(PriorityQueue<ProcessControlBlock> queue, ArrayList<GanttChartElement> ganttChart) {
+		
 	}
 }

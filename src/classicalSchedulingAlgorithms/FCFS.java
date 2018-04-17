@@ -1,6 +1,8 @@
 package classicalSchedulingAlgorithms;
+import processInformation.GanttChartElement;
 import processInformation.ProcessControlBlock;
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 
 public class FCFS{
 	private ArrayList<ProcessControlBlock> processes = new ArrayList<ProcessControlBlock>();
@@ -50,5 +52,9 @@ public class FCFS{
 	
 	public void stop_thread(){
 		running = false;
+	}
+	
+	public static void executeAlgorithm(PriorityQueue<ProcessControlBlock> queue, ArrayList<GanttChartElement> ganttChart) {
+		
 	}
 }

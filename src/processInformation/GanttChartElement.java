@@ -5,12 +5,12 @@ public class GanttChartElement {
 	private int PID;
 
 	private int beginTime;
-	private int EndTime;
+	private int endTime;
 	
 	public GanttChartElement(int PID, int beginTime, int EndTime) {
 		this.PID = PID;
 		this.beginTime = beginTime;
-		this.EndTime = EndTime;
+		this.endTime = EndTime;
 	}
 	
 	public int getPID() {
@@ -22,10 +22,14 @@ public class GanttChartElement {
 	}
 
 	public int getEndTime() {
-		return EndTime;
+		return endTime;
 	}
 
 	public void incEndTime() {
-		EndTime++;
+		endTime++;
+	}
+	
+	public void setEndTime(int end) {
+		endTime = end;
 	}
 }

@@ -1,7 +1,9 @@
 package classicalSchedulingAlgorithms;
 
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 
+import processInformation.GanttChartElement;
 import processInformation.ProcessControlBlock;
 
 public class NPPriority {
@@ -76,6 +78,10 @@ public class NPPriority {
 	
 	public void stop_thread(){
 		running = false;
+	}
+	
+	public static void executeAlgorithm(PriorityQueue<ProcessControlBlock> queue, ArrayList<GanttChartElement> ganttChart) {
+		
 	}
 
 }
