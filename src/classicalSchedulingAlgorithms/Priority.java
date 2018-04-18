@@ -2,9 +2,10 @@ package classicalSchedulingAlgorithms;
 
 import java.util.ArrayList;
 
+import processInformation.GanttChartElement;
 import processInformation.ProcessControlBlock;
 
-public class Priority {
+public class Priority  implements ClassicalSchedulingMethods{
 	private ArrayList<ProcessControlBlock> processes = new ArrayList<ProcessControlBlock>();
 	private Boolean running = true;
 	private int totalBurstTime;
@@ -75,6 +76,10 @@ public class Priority {
 	
 	public void stop_thread(){
 		running = false;
+	}
+	
+	public void execute(ArrayList<ProcessControlBlock> e, ArrayList<GanttChartElement> f, int time) {
+		
 	}
 
 }

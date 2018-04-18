@@ -28,4 +28,8 @@ public class GanttChartElement {
 	public void incEndTime() {
 		EndTime++;
 	}
+	
+	public void setEndTime(int et) {
+		EndTime = et;
+	}
 }

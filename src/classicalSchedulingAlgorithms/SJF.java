@@ -1,10 +1,12 @@
 package classicalSchedulingAlgorithms;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
+import processInformation.GanttChartElement;
 import processInformation.ProcessControlBlock;
 
-public class SJF{
+public class SJF  implements ClassicalSchedulingMethods{
 	private ArrayList<ProcessControlBlock> processes = new ArrayList<ProcessControlBlock>();
 	private Boolean running = true;
 	private int totalBurstTime;
@@ -71,4 +73,9 @@ public class SJF{
 	public void stop_thread(){
 		running = false;
 	}
+	
+	public void execute(ArrayList<ProcessControlBlock> e, ArrayList<GanttChartElement> f, int time) {
+		
+	}
+
 }

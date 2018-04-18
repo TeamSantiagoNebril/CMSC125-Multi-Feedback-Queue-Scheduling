@@ -7,7 +7,7 @@ import java.util.Comparator;
 import processInformation.GanttChartElement;
 import processInformation.ProcessControlBlock;
 
-public class ShortestRemainingTimeFirst {
+public class SRTF  implements ClassicalSchedulingMethods{
 	private ArrayList<ProcessControlBlock> processes = new ArrayList<ProcessControlBlock>();
 	private ArrayList<ProcessControlBlock> finalProcessState = new ArrayList<ProcessControlBlock>();
 	private Boolean running = true;
@@ -84,6 +84,10 @@ public class ShortestRemainingTimeFirst {
 		        return one.getArrivalTimeInInteger().compareTo(other.getArrivalTime());
 		    }
 		});
+	}
+	
+	public void execute(ArrayList<ProcessControlBlock> e, ArrayList<GanttChartElement> f, int time) {
+		
 	}
 	
 }

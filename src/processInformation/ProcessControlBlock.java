@@ -55,5 +55,19 @@ public class ProcessControlBlock {
 		return in;
 	}
 	
+	public void decBurstTime() {
+		burstTime--;
+	}
+	
+	public boolean isEmptyBurstTime() {
+		if(burstTime == 0)
+		{
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+	
 	
 }
