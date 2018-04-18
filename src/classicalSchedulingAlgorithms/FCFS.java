@@ -9,15 +9,15 @@ public class FCFS implements ClassicalSchedulingMethods{
 	private Boolean running = true;
 	private int totalBurstTime;
 	private boolean endSignal;
-	public void execute(){
-		int time;
+	public void execute(ArrayList<GanttChartElement> gc, int time){
+		int btime;
 		while(running){
 			if(processes.size() != 0){
 				if(totalBurstTime >= processes.get(0).getArrivalTime()){
 					System.out.println("Process: " + processes.get(0).getPID());
 					while(processes.get(0).getBurstTime() != 0){
-						time = processes.get(0).getBurstTime()-1;
-						processes.get(0).setBurstTime(time);
+						btime = processes.get(0).getBurstTime()-1;
+						processes.get(0).setBurstTime(btime);
 						totalBurstTime++;
 						
 					}
@@ -70,5 +70,9 @@ public class FCFS implements ClassicalSchedulingMethods{
 			f.get(f.size()-1).setEndTime(time+1);
 			e.remove(0);
 		}
+	}
+	
+	public int getProcessList(){
+		return processes.size();
 	}
 }

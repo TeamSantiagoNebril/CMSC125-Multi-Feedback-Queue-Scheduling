@@ -13,16 +13,21 @@ public class SJF  implements ClassicalSchedulingMethods{
 	private boolean endSignal;
 	private boolean executingProcess;
 	private ArrayList<ProcessControlBlock> arrivedProcesses = new ArrayList<ProcessControlBlock>();
-	public void execute(){
-		int time;
+	public void execute(ArrayList<GanttChartElement> gc, int time){
+		
+		int btime;
 		if(arrivedProcesses.size() != 0){
 			executingProcess = true;
-			System.out.println("Process: " + arrivedProcesses.get(0).getPID());
-			time = arrivedProcesses.get(0).getBurstTime()-1;
-			arrivedProcesses.get(0).setBurstTime(time);
+			//System.out.println("Process: " + arrivedProcesses.get(0).getPID());
+			if(gc.size() == 0 ||(gc.get(gc.size()-1).getPID() != arrivedProcesses.get(0).getPID())) {
+				gc.add(new GanttChartElement(arrivedProcesses.get(0).getPID(), time, 0));
+			}
+			btime = arrivedProcesses.get(0).getBurstTime()-1;
+			arrivedProcesses.get(0).setBurstTime(btime);
 			totalBurstTime++;
-			
+
 			if(arrivedProcesses.get(0).getBurstTime() == 0){
+				gc.get(gc.size()-1).setEndTime(time);
 				executingProcess = false;
 				arrivedProcesses.remove(0);
 			}
@@ -76,6 +81,10 @@ public class SJF  implements ClassicalSchedulingMethods{
 	
 	public void execute(ArrayList<ProcessControlBlock> e, ArrayList<GanttChartElement> f, int time) {
 		
+	}
+	
+	public int getProcessList(){
+		return processes.size();
 	}
 
 }

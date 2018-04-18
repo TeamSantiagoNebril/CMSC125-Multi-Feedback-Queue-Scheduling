@@ -19,7 +19,7 @@ public class RoundRobinScheduling  implements ClassicalSchedulingMethods{
 	}
 	
 	
-	public void execute(){
+	public void execute(ArrayList<GanttChartElement> gc, int time){
 		System.out.println("totalBurstTime: "+totalBurstTime);
 		for(int counter = 0; counter < totalBurstTime; counter++)
 		{
@@ -77,5 +77,9 @@ public class RoundRobinScheduling  implements ClassicalSchedulingMethods{
 	
 	public void execute(ArrayList<ProcessControlBlock> e, ArrayList<GanttChartElement> f, int time) {
 		
+	}
+	
+	public int getProcessList(){
+		return processes.size();
 	}
 }

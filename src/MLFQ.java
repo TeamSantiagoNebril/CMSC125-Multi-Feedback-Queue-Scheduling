@@ -39,14 +39,6 @@ public class MLFQ {
 	
 	public MLFQ(int numQueues, int[] schedulingAlgos) {
 		priority = HIGH_BEFORE_LOW;
-		
-		
-		
-		
-		
-		
-		
-		
 		this.numQueues = numQueues;
 		this.schedulingAlgorithm4EachQueue = schedulingAlgos;
 		processQueues = new ArrayList[numQueues];
@@ -60,10 +52,12 @@ public class MLFQ {
 	}
 	
 	public void execute() {
+		System.out.println(processes.size());
 		while(true)
 		{
 			if((processes.size() != 0) && (processes.get(0).getArrivalTime() <= time)){ //Insert processes here
-				processQueues[firstEntry].add(processes.get(0));
+				//processQueues[firstEntry].add(processes.get(0));
+				schedulingAlgorithms.get(firstEntry).addProcess(processes.get(0));
 				processes.remove(0);
 			}
 			boolean allEmpty = true;
@@ -71,9 +65,11 @@ public class MLFQ {
 			switch(priority) {
 			case HIGH_BEFORE_LOW:
 				for(int index = 0; index < numQueues; index++) {
-					if(processQueues[index].size() != 0) {
-						System.out.println(index);
-						executeSpecifiedAlgo(index, processQueues[index]);
+					System.out.println(schedulingAlgorithms.get(index).getProcessList()+"FFF");
+					if(schedulingAlgorithms.get(index).getProcessList() != 0) {
+						
+						schedulingAlgorithms.get(index).execute(ganttChart, time);
+						//executeSpecifiedAlgo(index);
 						allEmpty = false;
 						break;
 					}
@@ -84,7 +80,7 @@ public class MLFQ {
 				
 			}
 			
-			if(allEmpty && processes.size() == 0 ) { 
+			if(allEmpty && processes.size() == 0 ) {
 				break;
 			}
 			time++;
@@ -115,27 +111,28 @@ public class MLFQ {
 			time++;
 		}*/
 	
-	public void executeSpecifiedAlgo(int index, ArrayList<ProcessControlBlock> queue) {
-		switch(schedulingAlgorithm4EachQueue[index]) { //Setting the correct algorithm for each queues
+	public void executeSpecifiedAlgo(int index) {
+		
+/*		switch(schedulingAlgorithm4EachQueue[index]) { //Setting the correct algorithm for each queues
 			case 1://FCFS
-				schedulingAlgorithms.get(index).execute(queue, ganttChart, time);
+				//schedulingAlgorithms.get(index).execute(queue, ganttChart, time);
 				break;
 			case 2://SJF
-				schedulingAlgorithms.get(index).execute(queue, ganttChart, time);
+				//schedulingAlgorithms.get(index).execute(queue, ganttChart, time);
 				break;
 			case 3://SRTF
-				schedulingAlgorithms.get(index).execute(queue, ganttChart, time);
+				//schedulingAlgorithms.get(index).execute(queue, ganttChart, time);
 				break;
 			case 4://NPPRIO
-				schedulingAlgorithms.get(index).execute(queue, ganttChart, time);
+				//schedulingAlgorithms.get(index).execute(queue, ganttChart, time);
 				break;
 			case 5://PRIO
-				schedulingAlgorithms.get(index).execute(queue, ganttChart, time);
+				//schedulingAlgorithms.get(index).execute(queue, ganttChart, time);
 				break;
 			case 6://RR
-				schedulingAlgorithms.get(index).execute(queue, ganttChart, time);
+				//schedulingAlgorithms.get(index).execute(queue, ganttChart, time);
 				break;
-		}
+		}*/
 		
 	}
 	
@@ -179,6 +176,7 @@ public class MLFQ {
 	
 	public void printGanttChart() {
 		System.out.println("Goes here");
+		System.out.println(ganttChart.size());
 		for(GanttChartElement e: ganttChart) {
 			System.out.println("PID: "+e.getPID() +"||bTime: "+e.getBeginTime()+"||eTime: "+e.getEndTime());
 		}

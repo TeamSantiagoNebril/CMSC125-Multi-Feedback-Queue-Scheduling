@@ -11,8 +11,8 @@ public class NPPriority  implements ClassicalSchedulingMethods{
 	private int totalBurstTime;
 	private boolean endSignal;
 	private ArrayList<ProcessControlBlock> arrivedProcesses = new ArrayList<ProcessControlBlock>();
-	public void execute(){
-		int time;
+	public void execute(ArrayList<GanttChartElement> gc, int time){
+		int btime;
 		while(running){
 			if(arrivedProcesses.size() != 0 || processes.size() != 0){
 				while(true){
@@ -26,8 +26,8 @@ public class NPPriority  implements ClassicalSchedulingMethods{
 				if(arrivedProcesses.size() != 0){
 					System.out.println("Process: " + arrivedProcesses.get(0).getPID());
 					while(arrivedProcesses.get(0).getBurstTime() != 0){
-						time = arrivedProcesses.get(0).getBurstTime()-1;
-						arrivedProcesses.get(0).setBurstTime(time);
+						btime = arrivedProcesses.get(0).getBurstTime()-1;
+						arrivedProcesses.get(0).setBurstTime(btime);
 						totalBurstTime++;
 						
 					}
@@ -81,6 +81,10 @@ public class NPPriority  implements ClassicalSchedulingMethods{
 	
 	public void execute(ArrayList<ProcessControlBlock> e, ArrayList<GanttChartElement> f, int time) {
 		
+	}
+	
+	public int getProcessList(){
+		return processes.size();
 	}
 
 }

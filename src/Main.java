@@ -26,7 +26,7 @@ public class Main extends Thread{
 		
 
 		int numQueues = 1;
-		int[] schedulingAlgos = {1};
+		int[] schedulingAlgos = {2};
 
 		
 		MLFQ schedAlgo = new MLFQ(numQueues, schedulingAlgos);

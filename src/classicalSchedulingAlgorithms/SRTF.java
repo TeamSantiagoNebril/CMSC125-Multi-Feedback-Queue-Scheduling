@@ -16,7 +16,7 @@ public class SRTF  implements ClassicalSchedulingMethods{
 	public ArrayList<GanttChartElement> ganttChart = new ArrayList<GanttChartElement>();
 	private int totalBurstTime = 0;
 	
-	public void execute(){
+	public void execute(ArrayList<GanttChartElement> gc, int time){
 		System.out.println("totalBurstTime: "+totalBurstTime);
 		int lastIndex = 0;
 		for(int counter = 0; counter < totalBurstTime; counter++)
@@ -88,6 +88,10 @@ public class SRTF  implements ClassicalSchedulingMethods{
 	
 	public void execute(ArrayList<ProcessControlBlock> e, ArrayList<GanttChartElement> f, int time) {
 		
+	}
+	
+	public int getProcessList(){
+		return processes.size();
 	}
 	
 }
