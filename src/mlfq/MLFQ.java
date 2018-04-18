@@ -166,35 +166,10 @@ public class MLFQ {
 			}
 			
 			performExecution();
-			checkMigration();
+			//checkMigration();
 			time++;
 		}
 	}
-		
-/*		SJF q[] = new SJF[3];
-		q[0] = new SJF();
-		q[1] = new SJF();
-		q[2] = new SJF();
-		while(true){
-			if((processes.size() != 0) && (processes.get(0).getArrivalTime() <= time)){
-				q[0].addProcess(processes.get(0));
-				processes.remove(0);
-			}
-			
-			if(q[0].isProcessing()){
-				q[0].execute();
-			}else if(q[1].isProcessing()){
-				q[1].execute();
-			}else if(q[2].isProcessing()){
-				q[2].execute();
-			}else if(processes.size() == 0){
-				break;
-			}
-			time++;
-		}
-		*/
-		//execute algorithm with Priority
-		//Check for Migration?
 	
 	public void performExecution() {
 		switch(priorityMode) {
@@ -203,6 +178,7 @@ public class MLFQ {
 					if(queues[counter].peek() == null) {
 						continue;
 					} else {
+						System.out.println("Queue number: " + counter);
 						if(queues[counter].peek().getHasBegun() == false) {
 							queues[counter].peek().setHasBegun();
 						}
@@ -220,13 +196,19 @@ public class MLFQ {
 						}
 /***************************GanttChart Purpose************************************/
 						
-						
 						queues[counter].peek().decBurstTime();
 						ProcessControlBlock temp;
 						if(schedulingAlgorithms[counter] != 6)
 						{
 							temp = queues[counter].remove();
 							queues[counter].add(temp);
+							if(temp.getPID() != queues[counter].peek().getPID()) { //if this is true then na pre empt yung process
+								if(counter > 0) {
+									System.out.println("Hala naaaa");
+									queues[counter].remove(temp);
+									queues[counter-1].add(temp);
+								}
+							}
 						}
 						
 						if(schedulingAlgorithms[counter] == 6) {
@@ -234,8 +216,10 @@ public class MLFQ {
 							if(forPosRR[counter] == 5) {
 								temp = queues[counter].remove();
 								if(temp.getBurstTime() != 0) {
+									System.out.println("Hindi siya pumupunta dito");
 									temp.incCPUPreempCounter();
-									queues[counter].add(temp);
+									checkMigration(counter, temp);
+									
 								}
 								forPosRR[counter] = 0;
 							}
@@ -265,13 +249,15 @@ public class MLFQ {
 	}
 	
 	
-	public void checkMigration() {
+	public void checkMigration(int counter, ProcessControlBlock temp) {
 		switch(promotionMode) {
 		
 		}
 		
 		switch(demotionMode) {
-		
+			case DEFAULT_DEMOTION:
+					queues[counter].add(temp);
+				break;
 		}
 		
 		switch(retentionMode) {
