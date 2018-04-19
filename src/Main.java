@@ -16,6 +16,7 @@ public class Main extends Thread{
 			schedAlgo.addProcess(process);
 		}
 		schedAlgo.execute();
+		schedAlgo.getGanttChart().printContents();
 		
 	}
 	

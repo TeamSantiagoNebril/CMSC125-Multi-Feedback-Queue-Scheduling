@@ -1,18 +1,39 @@
 package classicalSchedulingAlgorithms;
+import processInformation.GanttChart;
 import processInformation.ProcessControlBlock;
 import java.util.ArrayList;
 
 public class FCFS extends SchedulingAlgorithm{
 	private ArrayList<ProcessControlBlock> processes = new ArrayList<ProcessControlBlock>();
 	private boolean executingProcess;
-	public void execute(){
+	
+	
+	public void execute(GanttChart ganttChart){
 		int time;
 		if(processes.size() != 0){
-			System.out.println("Process: " + processes.get(0).getPID());
+			//System.out.println("Process: " + processes.get(0).getPID());
 			executingProcess = true;
 			time = processes.get(0).getBurstTime()-1;
 			processes.get(0).setBurstTime(time);
+			
+			if(ganttChart.isEmpty()) {
+				int PID = processes.get(0).getPID();
+				ganttChart.addGTElement(PID);
+				
+			} else if (ganttChart.getLastElement().getPID() != processes.get(0).getPID()) {
+				if(ganttChart.currentIsClosed() == false) {
+					ganttChart.closeCurrentGantt();
+					ganttChart.setEndTime();
+				}
+				int PID = processes.get(0).getPID();
+				ganttChart.addGTElement(PID);
+			}
+			
 			if(processes.get(0).getBurstTime() == 0){
+				if(ganttChart.currentIsClosed() == false) {
+					ganttChart.closeCurrentGantt();
+					ganttChart.setEndTime();
+				}
 				executingProcess = false;
 				processes.remove(0);
 			}

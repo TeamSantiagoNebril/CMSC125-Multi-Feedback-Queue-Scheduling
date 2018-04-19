@@ -2,20 +2,38 @@ package classicalSchedulingAlgorithms;
 
 import java.util.ArrayList;
 
+import processInformation.GanttChart;
 import processInformation.ProcessControlBlock;
 
 public class NPPriority extends SchedulingAlgorithm{
 	private ArrayList<ProcessControlBlock> arrivedProcesses = new ArrayList<ProcessControlBlock>();
 	private boolean executingProcess;	
-	public void execute(){
+	public void execute(GanttChart ganttChart){
 		int time;
 		if(arrivedProcesses.size() != 0){
 			executingProcess = true;
-			System.out.println("Process: " + arrivedProcesses.get(0).getPID());
+			//System.out.println("Process: " + arrivedProcesses.get(0).getPID());
 			time = arrivedProcesses.get(0).getBurstTime()-1;
 			arrivedProcesses.get(0).setBurstTime(time);
 			
+			if(ganttChart.isEmpty()) {
+				int PID = arrivedProcesses.get(0).getPID();
+				ganttChart.addGTElement(PID);
+			} else if (ganttChart.getLastElement().getPID() != arrivedProcesses.get(0).getPID()) {
+				if(ganttChart.currentIsClosed() == false) {
+					ganttChart.closeCurrentGantt();
+					ganttChart.setEndTime();
+				}
+				int PID = arrivedProcesses.get(0).getPID();
+				ganttChart.addGTElement(PID);
+			}
+			
+			
 			if(arrivedProcesses.get(0).getBurstTime() == 0){
+				if(ganttChart.currentIsClosed() == false) {
+					ganttChart.closeCurrentGantt();
+					ganttChart.setEndTime();
+				}
 				executingProcess = false;
 				arrivedProcesses.remove(0);
 			}

@@ -7,23 +7,22 @@ import classicalSchedulingAlgorithms.RoundRobinScheduling;
 import classicalSchedulingAlgorithms.ShortestRemainingTimeFirst;
 import classicalSchedulingAlgorithms.SchedulingAlgorithm;
 import classicalSchedulingAlgorithms.SJF;
+import processInformation.GanttChart;
 import processInformation.ProcessControlBlock;
 import java.util.Scanner;
 
 public class MLFQ {
-	private ArrayList<Integer>entryQueue = new ArrayList<Integer>();
-	private int[] entryQueueElements= {2, 1, 0, 0, 2, 2, 1};
+
 	private ArrayList<ProcessControlBlock> processes = new ArrayList<ProcessControlBlock>();
 	private ArrayList<SchedulingAlgorithm> schedulingAlgorithms = new ArrayList<SchedulingAlgorithm>(); 
 	private ArrayList<Integer>timeSlice = new ArrayList<Integer>();
+	private GanttChart ganttChart;
 	private int time;
 	public MLFQ(){
 		Scanner scan = new Scanner(System.in);
+		ganttChart = new GanttChart();
 		int queueNumber;
-		for(int a = 0; a < 7; a++){
-			entryQueue.add(entryQueueElements[a]);
-		}
-		
+
 		System.out.print("Enter number of queues: ");
 		queueNumber = scan.nextInt();
 		
@@ -82,10 +81,10 @@ public class MLFQ {
 			ProcessControlBlock temp;
 			while(a < size){
 				if(schedulingAlgorithms.get(a).isProcessing()){
-					//System.out.println("Goes here");
+					
 					toEnd = false;
 					
-					schedulingAlgorithms.get(a).execute();
+					schedulingAlgorithms.get(a).execute(ganttChart);
 					if(a != size - 1){															//demotion. Not applicable to the last queue
 						if(schedulingAlgorithms.get(a).getProcess() != null){
 							schedulingAlgorithms.get(a).getProcess().subtractTimeSlice();
@@ -105,7 +104,8 @@ public class MLFQ {
 			if(processes.size() == 0 && toEnd){
 				break;
 			}
-			time++;                                                                                            
+			time++;
+			ganttChart.incTime();
 		}
 	}
 	
@@ -120,5 +120,9 @@ public class MLFQ {
 				break;
 			}
 		}
+	}
+	
+	public GanttChart getGanttChart() {
+		return ganttChart;
 	}
 }

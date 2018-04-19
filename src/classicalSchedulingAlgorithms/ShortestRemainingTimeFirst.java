@@ -4,44 +4,68 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import processInformation.GanttChart;
 import processInformation.GanttChartElement;
 import processInformation.ProcessControlBlock;
 
 public class ShortestRemainingTimeFirst extends SchedulingAlgorithm{
-	private ArrayList<ProcessControlBlock> processes = new ArrayList<ProcessControlBlock>();
+	private ArrayList<ProcessControlBlock> arrivedProcesses = new ArrayList<ProcessControlBlock>();
 	private ArrayList<ProcessControlBlock> finalProcessState = new ArrayList<ProcessControlBlock>();
-//	private Boolean running = true;
-//	private boolean endSignal;
-//	private ArrayList<ProcessControlBlock> arrivedProcesses = new ArrayList<ProcessControlBlock>();
-	public ArrayList<GanttChartElement> ganttChart = new ArrayList<GanttChartElement>();
-//	private int totalBurstTime = 0;
+	private ProcessControlBlock currentProcess;
 	
-	public void execute(){
+	
+	public void execute(GanttChart ganttChart){
 		ProcessControlBlock temp;
 		
-		if(processes.size()  != 0) {
+		if(arrivedProcesses.size()  != 0) {
 			int tempIndex = 0;
-			temp = processes.get(tempIndex);
-			for(int counter2 = 1; counter2 < processes.size(); counter2++)//selects from the arrivedlist with smallest burstime
+			temp = arrivedProcesses.get(tempIndex);
+			for(int counter2 = 1; counter2 < arrivedProcesses.size(); counter2++)//selects from the arrivedlist with smallest burstime
 			{
-				if(processes.get(counter2).getBurstTime() < temp.getBurstTime()) {
+				if(arrivedProcesses.get(counter2).getBurstTime() < temp.getBurstTime()) {
 					tempIndex = counter2;
-				}else if(processes.get(counter2).getBurstTime() == temp.getBurstTime()) { //uses fifo if both burstime is equal
-					if(processes.get(counter2).getArrivalTime() < temp.getArrivalTime()) {
+				}else if(arrivedProcesses.get(counter2).getBurstTime() == temp.getBurstTime()) { //uses fifo if both burstime is equal
+					if(arrivedProcesses.get(counter2).getArrivalTime() < temp.getArrivalTime()) {
 						tempIndex = counter2;
 					}
 				}
 			}
-			System.out.println("Process: " + processes.get(tempIndex).getPID());
 			
-			int burst = processes.get(tempIndex).getBurstTime();
-			processes.get(tempIndex).setBurstTime(--burst);
+			//System.out.println("Process: " + arrivedProcesses.get(tempIndex).getPID());
+			
+			int burst = arrivedProcesses.get(tempIndex).getBurstTime();
+			arrivedProcesses.get(tempIndex).setBurstTime(--burst);
+			
+			if(ganttChart.isEmpty()) {
+				int PID = arrivedProcesses.get(tempIndex).getPID();
+				ganttChart.addGTElement(PID);
+			} else if (ganttChart.getLastElement().getPID() != arrivedProcesses.get(tempIndex).getPID()) {
+				if(ganttChart.currentIsClosed() == false) {
+					ganttChart.closeCurrentGantt();
+					ganttChart.setEndTime();
+				}
+				int PID = arrivedProcesses.get(tempIndex).getPID();
+				ganttChart.addGTElement(PID);
+			}
+			
+			
+			if(currentProcess == null) { //For Incrementing Execution History Information
+				currentProcess = arrivedProcesses.get(tempIndex);
+			} else if(currentProcess.getPID() != arrivedProcesses.get(tempIndex).getPID()) {
+				currentProcess.incCPUPreempCounter();
+				currentProcess = arrivedProcesses.get(tempIndex);
+
+			}
 			
 			//for removing processes with no more burst time
-			if(processes.get(tempIndex).getBurstTime() == 0)
+			if(arrivedProcesses.get(tempIndex).getBurstTime() == 0)
 			{
-				finalProcessState.add(processes.get(tempIndex));
-				processes.remove(tempIndex);
+				if(ganttChart.currentIsClosed() == false) {
+					ganttChart.closeCurrentGantt();
+					ganttChart.setEndTime();
+				}
+				finalProcessState.add(arrivedProcesses.get(tempIndex));
+				arrivedProcesses.remove(tempIndex);
 			}
 		}
 		
@@ -107,7 +131,7 @@ public class ShortestRemainingTimeFirst extends SchedulingAlgorithm{
 	}
 	
 	public boolean isProcessing(){
-		if(processes.size() != 0){
+		if(arrivedProcesses.size() != 0){
 			return true;
 		}
 		
@@ -115,13 +139,14 @@ public class ShortestRemainingTimeFirst extends SchedulingAlgorithm{
 	}
 	
 	public void addProcess(ProcessControlBlock process){
-		processes.add(process);
-/*		totalBurstTime += process.getBurstTime();
-		Collections.sort(processes, new Comparator<ProcessControlBlock>() { //Sort according to arrivalTime
-		    public int compare(ProcessControlBlock one, ProcessControlBlock other) {
-		        return one.getArrivalTimeInInteger().compareTo(other.getArrivalTime());
-		    }
-		});*/
+		arrivedProcesses.add(process);
+	}
+	
+	public ProcessControlBlock getProcess(){
+		if(arrivedProcesses.size() == 0){
+			return null;
+		}
+		return arrivedProcesses.get(0);
 	}
 	
 }

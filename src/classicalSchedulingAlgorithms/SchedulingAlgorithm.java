@@ -2,19 +2,20 @@ package classicalSchedulingAlgorithms;
 
 import java.util.ArrayList;
 
+import processInformation.GanttChart;
 import processInformation.ProcessControlBlock;
 
 public class SchedulingAlgorithm {
 	private ArrayList<ProcessControlBlock> processes = new ArrayList<ProcessControlBlock>();
+
 	public void addProcess(ProcessControlBlock process){
 	}
 	
-	public void execute(){
+	public void execute(GanttChart ganttChart){
 		
 	}
 	
 	public boolean isProcessing(){
-		
 		return false;
 	}
 	
