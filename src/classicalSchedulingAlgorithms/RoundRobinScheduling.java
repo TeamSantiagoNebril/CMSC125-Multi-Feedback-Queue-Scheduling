@@ -9,18 +9,43 @@ import processInformation.ProcessControlBlock;
 
 public class RoundRobinScheduling extends SchedulingAlgorithm{
 	private ArrayList<ProcessControlBlock> processes = new ArrayList<ProcessControlBlock>();
-	private ArrayList<ProcessControlBlock> arrivedProcesses = new ArrayList<ProcessControlBlock>();
+//	private ArrayList<ProcessControlBlock> arrivedProcesses = new ArrayList<ProcessControlBlock>();
 	public ArrayList<GanttChartElement> ganttChart = new ArrayList<GanttChartElement>();
-	private int totalBurstTime = 0;
+//	private int totalBurstTime = 0;
 	private int timeQuantum;
+	private int currentTimeQuantum;
 	
 	public RoundRobinScheduling(int quantumTime) {
 		this.timeQuantum = quantumTime;
+		currentTimeQuantum = 0;
 	}
 	
 	
 	public void execute(){
-		System.out.println("totalBurstTime: "+totalBurstTime);
+		if(processes.size() != 0)
+		{
+			System.out.println("Process: " + processes.get(0).getPID());
+			if(currentTimeQuantum == timeQuantum) {
+				processes.get(0).incCPUPreempCounter();
+				ProcessControlBlock temp = processes.get(0);
+				processes.remove(0);
+				processes.add(temp);
+				currentTimeQuantum = 0;
+			}
+			
+			int burst = processes.get(0).getBurstTime();
+			processes.get(0).setBurstTime(--burst);
+			currentTimeQuantum++;
+			
+			
+			if(processes.get(0).getBurstTime() == 0) {
+				processes.remove(0);
+			}
+			
+		}
+		
+		
+	/*	System.out.println("totalBurstTime: "+totalBurstTime);
 		for(int counter = 0; counter < totalBurstTime; counter++)
 		{
 			ProcessControlBlock temp;
@@ -62,11 +87,23 @@ public class RoundRobinScheduling extends SchedulingAlgorithm{
 				}
 			}
 		}
+	*/
+	}
+	
+	public boolean isBurstTimeEmpty() {
+		if(processes.get(0).getBurstTime() == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void preEmpProcess() {
 		
 	}
 	
 	public boolean isProcessing(){
-		if(arrivedProcesses.size() != 0){
+		if(processes.size() != 0){
 			return true;
 		}
 		
@@ -75,11 +112,11 @@ public class RoundRobinScheduling extends SchedulingAlgorithm{
 	
 	public void addProcess(ProcessControlBlock process){
 		processes.add(process);
-		totalBurstTime += process.getBurstTime();
-		Collections.sort(processes, new Comparator<ProcessControlBlock>() { //Sort according to arrivalTime
+		//totalBurstTime += process.getBurstTime();
+		/*Collections.sort(processes, new Comparator<ProcessControlBlock>() { //Sort according to arrivalTime
 		    public int compare(ProcessControlBlock one, ProcessControlBlock other) {
 		        return one.getArrivalTimeInInteger().compareTo(other.getArrivalTime());
 		    }
-		});
+		});*/
 	}
 }

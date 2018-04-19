@@ -4,7 +4,7 @@ import java.util.Random;
 public class Main extends Thread{
 	public Main(){
 		int pID[]= {1, 2, 3, 4, 5, 6, 7};
-		int arrivalTime[] = {33, 25, 41, 26, 36, 0, 7};
+		int arrivalTime[] = {33, 25, 41, 26, 36, 1, 7};
 		int burstTime[] = {6, 39, 14, 10, 5, 39, 48};
 		int priority[] = {15, 20, 9, 7, 8, 8, 17};
 		

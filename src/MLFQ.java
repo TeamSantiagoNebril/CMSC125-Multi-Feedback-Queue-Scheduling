@@ -82,6 +82,7 @@ public class MLFQ {
 			ProcessControlBlock temp;
 			while(a < size){
 				if(schedulingAlgorithms.get(a).isProcessing()){
+					//System.out.println("Goes here");
 					toEnd = false;
 					
 					schedulingAlgorithms.get(a).execute();
