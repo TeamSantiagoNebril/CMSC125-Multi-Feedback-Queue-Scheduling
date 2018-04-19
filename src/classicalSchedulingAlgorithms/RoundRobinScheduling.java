@@ -7,7 +7,7 @@ import java.util.Comparator;
 import processInformation.GanttChartElement;
 import processInformation.ProcessControlBlock;
 
-public class RoundRobinScheduling {
+public class RoundRobinScheduling extends SchedulingAlgorithm{
 	private ArrayList<ProcessControlBlock> processes = new ArrayList<ProcessControlBlock>();
 	private ArrayList<ProcessControlBlock> arrivedProcesses = new ArrayList<ProcessControlBlock>();
 	public ArrayList<GanttChartElement> ganttChart = new ArrayList<GanttChartElement>();
@@ -63,6 +63,14 @@ public class RoundRobinScheduling {
 			}
 		}
 		
+	}
+	
+	public boolean isProcessing(){
+		if(arrivedProcesses.size() != 0){
+			return true;
+		}
+		
+		return false;
 	}
 	
 	public void addProcess(ProcessControlBlock process){

@@ -2,38 +2,34 @@ package classicalSchedulingAlgorithms;
 import processInformation.ProcessControlBlock;
 import java.util.ArrayList;
 
-public class FCFS{
+public class FCFS extends SchedulingAlgorithm{
 	private ArrayList<ProcessControlBlock> processes = new ArrayList<ProcessControlBlock>();
-	private Boolean running = true;
-	private int totalBurstTime;
-	private boolean endSignal;
+	private boolean executingProcess;
 	public void execute(){
 		int time;
-		while(running){
-			if(processes.size() != 0){
-				if(totalBurstTime >= processes.get(0).getArrivalTime()){
-					System.out.println("Process: " + processes.get(0).getPID());
-					while(processes.get(0).getBurstTime() != 0){
-						time = processes.get(0).getBurstTime()-1;
-						processes.get(0).setBurstTime(time);
-						totalBurstTime++;
-						
-					}
-					processes.remove(0);
-				}else{
-					totalBurstTime++;
-				}
-			}else{
-				break;
+		if(processes.size() != 0){
+			System.out.println("Process: " + processes.get(0).getPID());
+			executingProcess = true;
+			time = processes.get(0).getBurstTime()-1;
+			processes.get(0).setBurstTime(time);
+			if(processes.get(0).getBurstTime() == 0){
+				executingProcess = false;
+				processes.remove(0);
 			}
 		}
-		System.out.println("Total: " + totalBurstTime);	
+			
 	}
 	
 	public void addProcess(ProcessControlBlock process){
 		processes.add(process);
+		int a;
+		if(executingProcess){
+			a = 1;
+		}else{
+			a = 1;
+		}
 		
-		for(int a = 0; a < processes.size(); a++){
+		for(; a < processes.size(); a++){
 			if((process.getArrivalTime() < processes.get(a).getArrivalTime()) && processes.size() > 1){
 				for(int b = processes.size() - 1; b >= a + 1 ; b--){
 					processes.set(b, processes.get(b-1));
@@ -44,11 +40,11 @@ public class FCFS{
 		}
 	}
 	
-	public void signalToEnd(){
-		endSignal = true;
-	}
-	
-	public void stop_thread(){
-		running = false;
+	public boolean isProcessing(){
+		if(processes.size() != 0){
+			return true;
+		}
+		
+		return false;
 	}
 }

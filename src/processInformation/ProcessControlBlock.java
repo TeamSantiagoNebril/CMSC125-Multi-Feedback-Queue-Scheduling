@@ -6,7 +6,7 @@ public class ProcessControlBlock {
 	private	int burstTime;
 	private	int priority;
 	private	int cpuPreemptionCounter;
-	
+	private int timeSlice;
 	public ProcessControlBlock(int pID, int arrivalTime, int burstTime, int priority){
 		this.pID = pID;
 		this. arrivalTime = arrivalTime;
@@ -55,5 +55,16 @@ public class ProcessControlBlock {
 		return in;
 	}
 	
+	public void setTimeSlice(int timeSlice){
+		this.timeSlice = timeSlice;
+	}
+	
+	public void subtractTimeSlice(){
+		timeSlice--;
+	}
+	
+	public int getTimeSlice(){
+		return timeSlice;
+	}
 	
 }

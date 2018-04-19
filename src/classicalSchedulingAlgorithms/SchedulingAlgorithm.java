@@ -6,18 +6,23 @@ import processInformation.ProcessControlBlock;
 
 public class SchedulingAlgorithm {
 	private ArrayList<ProcessControlBlock> processes = new ArrayList<ProcessControlBlock>();
-	private Boolean running = true;
-	private int totalBurstTime;
-	private boolean endSignal;
-	public void arriveProcess(ProcessControlBlock process){
-		processes.add(process);
+	public void addProcess(ProcessControlBlock process){
 	}
 	
-	public void signalToEnd(){
-		endSignal = true;
+	public void execute(){
+		
 	}
 	
-	public void stop_thread(){
-		running = false;
+	public boolean isProcessing(){
+		
+		return false;
+	}
+	
+	public ProcessControlBlock getProcess(){
+		return processes.get(0);
+	}
+	
+	public ProcessControlBlock removeProcess(){
+		return processes.get(0);
 	}
 }

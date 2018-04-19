@@ -1,14 +1,8 @@
 package classicalSchedulingAlgorithms;
-
 import java.util.ArrayList;
-
 import processInformation.ProcessControlBlock;
 
-public class SJF{
-	private ArrayList<ProcessControlBlock> processes = new ArrayList<ProcessControlBlock>();
-	private Boolean running = true;
-	private int totalBurstTime;
-	private boolean endSignal;
+public class SJF extends SchedulingAlgorithm{
 	private boolean executingProcess;
 	private ArrayList<ProcessControlBlock> arrivedProcesses = new ArrayList<ProcessControlBlock>();
 	public void execute(){
@@ -18,19 +12,15 @@ public class SJF{
 			System.out.println("Process: " + arrivedProcesses.get(0).getPID());
 			time = arrivedProcesses.get(0).getBurstTime()-1;
 			arrivedProcesses.get(0).setBurstTime(time);
-			totalBurstTime++;
 			
 			if(arrivedProcesses.get(0).getBurstTime() == 0){
 				executingProcess = false;
 				arrivedProcesses.remove(0);
 			}
-		}else{
-			totalBurstTime++;
 		}
 	}
 	
 	public void addProcess(ProcessControlBlock process){
-		
 		arrivedProcesses.add(process);
 		int a;
 		if(executingProcess){
@@ -50,9 +40,13 @@ public class SJF{
 		}
 	}
 	
-	public ProcessControlBlock removeProcess(int a){
-		ProcessControlBlock proc = arrivedProcesses.get(a);
-		arrivedProcesses.remove(a);
+	public ProcessControlBlock getProcess(){
+		return arrivedProcesses.get(0);
+	}
+	
+	public ProcessControlBlock removeProcess(){
+		ProcessControlBlock proc = arrivedProcesses.get(0);
+		arrivedProcesses.remove(0);
 		return proc;
 	}
 	
@@ -60,15 +54,6 @@ public class SJF{
 		if(arrivedProcesses.size() != 0){
 			return true;
 		}
-		
 		return false;
-	}
-	
-	public void signalToEnd(){
-		endSignal = true;
-	}
-	
-	public void stop_thread(){
-		running = false;
 	}
 }

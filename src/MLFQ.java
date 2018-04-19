@@ -5,42 +5,94 @@ import classicalSchedulingAlgorithms.NPPriority;
 import classicalSchedulingAlgorithms.Priority;
 import classicalSchedulingAlgorithms.RoundRobinScheduling;
 import classicalSchedulingAlgorithms.ShortestRemainingTimeFirst;
+import classicalSchedulingAlgorithms.SchedulingAlgorithm;
 import classicalSchedulingAlgorithms.SJF;
 import processInformation.ProcessControlBlock;
+import java.util.Scanner;
 
 public class MLFQ {
 	private ArrayList<Integer>entryQueue = new ArrayList<Integer>();
 	private int[] entryQueueElements= {2, 1, 0, 0, 2, 2, 1};
 	private ArrayList<ProcessControlBlock> processes = new ArrayList<ProcessControlBlock>();
-	private Boolean running = true;
-	private int totalBurstTime;
-	private ArrayList<ProcessControlBlock> arrivedProcesses = new ArrayList<ProcessControlBlock>();
+	private ArrayList<SchedulingAlgorithm> schedulingAlgorithms = new ArrayList<SchedulingAlgorithm>(); 
+	//private ArrayList<Integer>timeSlice = new ArrayList<Integer>();
 	private int time;
 	public MLFQ(){
+		Scanner scan = new Scanner(System.in);
+		int queueNumber;
 		for(int a = 0; a < 7; a++){
 			entryQueue.add(entryQueueElements[a]);
 		}
+		
+		System.out.print("Enter number of queues: ");
+		queueNumber = scan.nextInt();
+		
+		listSchedulingAlgorithms();
+		
+		int choice;
+		for(int a = 0; a < queueNumber; a++){
+			System.out.print("Scheduling Algorithm for queue" + (a+1) + ": ");
+			choice = scan.nextInt();
+			if(choice == 1){
+				schedulingAlgorithms.add(new FCFS());
+			}else if(choice == 2){
+				schedulingAlgorithms.add(new SJF());
+			}else if(choice == 3){
+				schedulingAlgorithms.add(new ShortestRemainingTimeFirst());
+			}else if(choice == 4){
+				schedulingAlgorithms.add(new NPPriority());
+			}else if(choice == 5){
+				schedulingAlgorithms.add(new Priority());
+			}else if(choice == 6){
+				System.out.print("Enter time quatum: ");
+				schedulingAlgorithms.add(new RoundRobinScheduling(scan.nextInt()));
+			}
+			
+			/*if(a < queueNumber - 1){
+				System.out.print("Enter time slice for this queue: ");
+				timeSlice.add(scan.nextInt());
+			}*/
+			
+		}
+		scan.close();
+	}
+	
+	public void listSchedulingAlgorithms(){
+		System.out.println("1. First Come First Serve");
+		System.out.println("2. Shortest Job First");
+		System.out.println("3. Shortest Remaining Time First");
+		System.out.println("4. Non-Preemptive Priority");
+		System.out.println("5. Preemptive Priority");
+		System.out.println("6. Round Robin");
 	}
 	
 	public void execute(){
-		SJF q[] = new SJF[3];
-		q[0] = new SJF();
-		q[1] = new SJF();
-		q[2] = new SJF();
 		while(true){
 			if((processes.size() != 0) && (processes.get(0).getArrivalTime() <= time)){
-				q[entryQueue.get(0)].addProcess(processes.get(0));
-				entryQueue.remove(0);
+				/*if(timeSlice.size() != 0){
+					processes.get(0).setTimeSlice(timeSlice.get(0));
+				}*/
+				schedulingAlgorithms.get(0).addProcess(processes.get(0));
 				processes.remove(0);
 			}
-			
-			if(q[0].isProcessing()){
-				q[0].execute();
-			}else if(q[1].isProcessing()){
-				q[1].execute();
-			}else if(q[2].isProcessing()){
-				q[2].execute();
-			}else if(processes.size() == 0){
+			boolean toEnd = true;
+			int a = 0;
+			int size = schedulingAlgorithms.size();
+			//ProcessControlBlock temp;
+			while(a < size){
+				if(schedulingAlgorithms.get(a).isProcessing()){
+					toEnd = false;
+					schedulingAlgorithms.get(a).execute();
+					
+				/*	if(schedulingAlgorithms.get(a).getProcess().getTimeSlice() == 0){
+						temp = schedulingAlgorithms.get(a).removeProcess();
+						
+					}*/
+					break;
+				}
+				a++;
+			}
+			if(processes.size() == 0 && toEnd){
 				break;
 			}
 			time++;

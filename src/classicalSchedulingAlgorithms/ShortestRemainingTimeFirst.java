@@ -7,7 +7,7 @@ import java.util.Comparator;
 import processInformation.GanttChartElement;
 import processInformation.ProcessControlBlock;
 
-public class ShortestRemainingTimeFirst {
+public class ShortestRemainingTimeFirst extends SchedulingAlgorithm{
 	private ArrayList<ProcessControlBlock> processes = new ArrayList<ProcessControlBlock>();
 	private ArrayList<ProcessControlBlock> finalProcessState = new ArrayList<ProcessControlBlock>();
 	private Boolean running = true;
@@ -74,6 +74,14 @@ public class ShortestRemainingTimeFirst {
 			}
 			
 		}
+	}
+	
+	public boolean isProcessing(){
+		if(arrivedProcesses.size() != 0){
+			return true;
+		}
+		
+		return false;
 	}
 	
 	public void addProcess(ProcessControlBlock process){
