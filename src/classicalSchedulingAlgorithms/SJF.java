@@ -41,6 +41,9 @@ public class SJF extends SchedulingAlgorithm{
 	}
 	
 	public ProcessControlBlock getProcess(){
+		if(arrivedProcesses.size() == 0){
+			return null;
+		}
 		return arrivedProcesses.get(0);
 	}
 	

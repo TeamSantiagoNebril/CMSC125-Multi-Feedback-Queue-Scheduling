@@ -40,11 +40,23 @@ public class FCFS extends SchedulingAlgorithm{
 		}
 	}
 	
+	public ProcessControlBlock getProcess(){
+		if(processes.size() == 0){
+			return null;
+		}
+		return processes.get(0);
+	}
+	
+	public ProcessControlBlock removeProcess(){
+		ProcessControlBlock proc = processes.get(0);
+		processes.remove(0);
+		return proc;
+	}
+	
 	public boolean isProcessing(){
 		if(processes.size() != 0){
 			return true;
 		}
-		
 		return false;
 	}
 }

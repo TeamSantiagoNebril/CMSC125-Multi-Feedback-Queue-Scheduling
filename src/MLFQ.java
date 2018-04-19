@@ -15,7 +15,7 @@ public class MLFQ {
 	private int[] entryQueueElements= {2, 1, 0, 0, 2, 2, 1};
 	private ArrayList<ProcessControlBlock> processes = new ArrayList<ProcessControlBlock>();
 	private ArrayList<SchedulingAlgorithm> schedulingAlgorithms = new ArrayList<SchedulingAlgorithm>(); 
-	//private ArrayList<Integer>timeSlice = new ArrayList<Integer>();
+	private ArrayList<Integer>timeSlice = new ArrayList<Integer>();
 	private int time;
 	public MLFQ(){
 		Scanner scan = new Scanner(System.in);
@@ -31,7 +31,7 @@ public class MLFQ {
 		
 		int choice;
 		for(int a = 0; a < queueNumber; a++){
-			System.out.print("Scheduling Algorithm for queue" + (a+1) + ": ");
+			System.out.print("Scheduling Algorithm for queue " + (a+1) + ": ");
 			choice = scan.nextInt();
 			if(choice == 1){
 				schedulingAlgorithms.add(new FCFS());
@@ -48,10 +48,10 @@ public class MLFQ {
 				schedulingAlgorithms.add(new RoundRobinScheduling(scan.nextInt()));
 			}
 			
-			/*if(a < queueNumber - 1){
+			if(a < queueNumber - 1){
 				System.out.print("Enter time slice for this queue: ");
 				timeSlice.add(scan.nextInt());
-			}*/
+			}
 			
 		}
 		scan.close();
@@ -69,25 +69,34 @@ public class MLFQ {
 	public void execute(){
 		while(true){
 			if((processes.size() != 0) && (processes.get(0).getArrivalTime() <= time)){
-				/*if(timeSlice.size() != 0){
+				if(timeSlice.size() != 0){
 					processes.get(0).setTimeSlice(timeSlice.get(0));
-				}*/
+				}
 				schedulingAlgorithms.get(0).addProcess(processes.get(0));
 				processes.remove(0);
 			}
+			
 			boolean toEnd = true;
 			int a = 0;
 			int size = schedulingAlgorithms.size();
-			//ProcessControlBlock temp;
+			ProcessControlBlock temp;
 			while(a < size){
 				if(schedulingAlgorithms.get(a).isProcessing()){
 					toEnd = false;
-					schedulingAlgorithms.get(a).execute();
 					
-				/*	if(schedulingAlgorithms.get(a).getProcess().getTimeSlice() == 0){
-						temp = schedulingAlgorithms.get(a).removeProcess();
-						
-					}*/
+					schedulingAlgorithms.get(a).execute();
+					if(a != size - 1){															//demotion. Not applicable to the last queue
+						if(schedulingAlgorithms.get(a).getProcess() != null){
+							schedulingAlgorithms.get(a).getProcess().subtractTimeSlice();
+							if(schedulingAlgorithms.get(a).getProcess().getTimeSlice() == 0){
+								temp = schedulingAlgorithms.get(a).removeProcess();
+								if(timeSlice.size() >= a + 2){
+									temp.setTimeSlice(timeSlice.get(a+1));
+								}
+								schedulingAlgorithms.get(a+1).addProcess(temp);
+							}
+						}
+					}
 					break;
 				}
 				a++;
@@ -95,7 +104,7 @@ public class MLFQ {
 			if(processes.size() == 0 && toEnd){
 				break;
 			}
-			time++;
+			time++;                                                                                            
 		}
 	}
 	
@@ -111,6 +120,4 @@ public class MLFQ {
 			}
 		}
 	}
-	
-	
 }
