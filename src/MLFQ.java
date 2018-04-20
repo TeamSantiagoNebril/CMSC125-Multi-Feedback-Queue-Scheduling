@@ -22,9 +22,27 @@ public class MLFQ {
 		Scanner scan = new Scanner(System.in);
 		ganttChart = new GanttChart();
 		int queueNumber;
-
+		
+		String processIDs;
+		String arrivalTime;
+		String burstTime;
+		String priority;
+		
 		System.out.print("Enter number of queues: ");
 		queueNumber = scan.nextInt();
+		scan.nextLine();
+		System.out.print("\nPlease enter Process IDs(Integers separated by comma ONLY): ");
+		processIDs = scan.nextLine();
+		System.out.print("\nPlease enter Arrival Time Array(Integers separated by comma ONLY): ");
+		arrivalTime = scan.nextLine();
+		System.out.print("\nPlease enter Burst Time Array(Integers separated by comma ONLY): ");
+		burstTime = scan.nextLine();
+		System.out.print("\nIf using priority scheduling, Please enter Process Priority Array(Integers separated by comma ONLY), or 'N': ");
+		priority = scan.nextLine();
+		
+		parseAndConvertToProcess(processIDs, arrivalTime, burstTime, priority);
+		
+		
 		
 		listSchedulingAlgorithms();
 		
@@ -124,5 +142,41 @@ public class MLFQ {
 	
 	public GanttChart getGanttChart() {
 		return ganttChart;
+	}
+	
+	public void parseAndConvertToProcess(String processIDs, String arrivalTime, String burstTime, String priority){
+		String[] SPID = processIDs.split(",");
+		String[] SAT = arrivalTime.split(",");
+		String[] SBT = burstTime.split(",");
+		String[] SP = null;
+		int[] PID = new int[SPID.length];
+		int[] AT = new int[SAT.length];
+		int[] BT = new int [SBT.length];
+		int[] prio = new int[SPID.length];
+		
+		if(priority == null || priority.equalsIgnoreCase("N") || priority.contains("N")) {
+			SP = new String[SPID.length];
+			for(int i = 0; i < SP.length; i++) {
+				SP[i] = "0";
+			}
+		} else {
+			SP = priority.split(",");
+		}
+		
+		if(SPID.length == SAT.length || SAT.length == SBT.length) {
+			for(int index = 0; index < SPID.length; index++) {
+				PID[index] = Integer.parseInt(SPID[index]);
+				AT[index] = Integer.parseInt(SAT[index]);
+				BT[index] = Integer.parseInt(SBT[index]);
+				prio[index] = Integer.parseInt(SP[index]);
+			}
+			for(int a = 0; a < PID.length; a++){							//for randomizing pa ini, in the mean time, let's settle for 7 laanay para masayon pagcheck
+				ProcessControlBlock process = new ProcessControlBlock(PID[a], AT[a], BT[a], prio[a]);	
+				addProcess(process);
+			}	
+		}else {
+			System.out.println("ERROR::array input lengths do not match.");
+			System.exit(-1);
+		}
 	}
 }

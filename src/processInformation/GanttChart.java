@@ -22,7 +22,7 @@ public class GanttChart{
 	}
 	
 	public void setEndTime() {
-		getLastElement().setEndTime(time);
+		getLastElement().setEndTime(time+1);
 	}
 	
 	public void incTime(){
@@ -38,9 +38,33 @@ public class GanttChart{
 	}
 	
 	public void printContents() {
-		for(GanttChartElement e: ganttChart) {
-			System.out.println("ProcessID: "+e.getPID()+"||Entry: "+e.getBeginTime()+"||End: "+e.getEndTime());
+		System.out.println("\n\n|***************************************************************************************************|");
+		System.out.println("Analysis: ");
+		System.out.println("Guide: ");
+		System.out.println("   +Arrival 	-> E: ");
+		System.out.println("   +Process ID  -> P: ");
+		System.out.println("   +End Time 	-> D: \n");
+		System.out.println("GanttChart: ");
+		System.out.print("<START>->");
+		int line = 0;
+		for(int index = 0; index < ganttChart.size(); index++) {
+			GanttChartElement e = ganttChart.get(index);
+			if(index == 0 || index != ganttChart.size()-1) {
+				System.out.print("[E:"+ e.getBeginTime()+" P:"+e.getPID()+" D:"+e.getEndTime()+"]->");
+			}
+			else {
+				System.out.print("[E:"+ e.getBeginTime()+" P:"+e.getPID()+" D:"+e.getEndTime()+"]");
+			}
+
+			if(line == 4) {
+				line = 0;
+				System.out.println();
+			}else {
+				line++;
+			}
 		}
+		System.out.println();
+		System.out.println("|***************************************************************************************************|");
 	}
 	
 	public void closeCurrentGantt() {
