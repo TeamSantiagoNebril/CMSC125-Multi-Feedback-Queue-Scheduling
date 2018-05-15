@@ -18,7 +18,10 @@ public class MLFQ {
 	private ArrayList<Integer>timeSlice = new ArrayList<Integer>();
 	private GanttChart ganttChart;
 	private int time;
-	public MLFQ(){
+	private int identifier;
+	public MLFQ(int identifier){
+		this.identifier = identifier;
+		
 		Scanner scan = new Scanner(System.in);
 		ganttChart = new GanttChart();
 		int queueNumber;
@@ -42,8 +45,6 @@ public class MLFQ {
 		
 		parseAndConvertToProcess(processIDs, arrivalTime, burstTime, priority);
 		
-		
-		
 		listSchedulingAlgorithms();
 		
 		int choice;
@@ -65,9 +66,16 @@ public class MLFQ {
 				schedulingAlgorithms.add(new RoundRobinScheduling(scan.nextInt()));
 			}
 			
-			if(a < queueNumber - 1){
-				System.out.print("Enter time slice for this queue: ");
-				timeSlice.add(scan.nextInt());
+			if(identifier == 1){
+				if(a < queueNumber - 1){
+					System.out.print("Enter time slice for this queue: ");
+					timeSlice.add(scan.nextInt());
+				}
+			}else{
+				if(a < queueNumber){
+					System.out.print("Enter time slice for this queue: ");
+					timeSlice.add(scan.nextInt());
+				}
 			}
 			
 		}
@@ -84,6 +92,65 @@ public class MLFQ {
 	}
 	
 	public void execute(){
+		if(identifier == 1){
+			higherBeforeLowerExecution();
+		}else{
+			fixedTimeSlotExecution();
+		}
+	}
+	
+	public void fixedTimeSlotExecution(){
+		while(true){
+			if((processes.size() != 0) && (processes.get(0).getArrivalTime() <= time)){
+				if(timeSlice.size() != 0){
+					processes.get(0).setTimeSlice(timeSlice.get(0));
+				}
+				schedulingAlgorithms.get(0).addProcess(processes.get(0));
+				processes.remove(0);
+			}
+			
+			boolean toEnd = true;
+			int a = 0;
+			int size = schedulingAlgorithms.size();
+			ProcessControlBlock temp;
+			while(a < size){
+				
+				if(schedulingAlgorithms.get(a).isProcessing()){
+					
+					toEnd = false;
+					System.out.println(a + ": " + schedulingAlgorithms.get(a).getProcess().getPID());
+					
+					schedulingAlgorithms.get(a).execute(ganttChart);
+					if(a != size ){															//demotion. Not applicable to the last queue
+						if(schedulingAlgorithms.get(a).getProcess() != null){
+							schedulingAlgorithms.get(a).getProcess().subtractTimeSlice();
+							if(schedulingAlgorithms.get(a).getProcess().getTimeSlice() == 0){
+								temp = schedulingAlgorithms.get(a).removeProcess();
+								if(timeSlice.size() >= a + 2){
+									temp.setTimeSlice(timeSlice.get(a+1));
+								}
+								if(a == size -1){
+									schedulingAlgorithms.get(0).addProcess(temp);
+									
+								}else{
+									schedulingAlgorithms.get(a+1).addProcess(temp);
+								}
+							}
+						}
+					}
+					break;
+				}
+				a++;
+			}
+			if(processes.size() == 0 && toEnd){
+				break;
+			}
+			time++;
+			ganttChart.incTime();
+		}
+	}
+	
+	public void higherBeforeLowerExecution(){
 		while(true){
 			if((processes.size() != 0) && (processes.get(0).getArrivalTime() <= time)){
 				if(timeSlice.size() != 0){

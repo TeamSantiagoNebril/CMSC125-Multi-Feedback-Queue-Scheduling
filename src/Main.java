@@ -2,6 +2,7 @@ import processInformation.ProcessControlBlock;
 import simulation.SimulationGUI;
 
 import java.util.Random;
+import java.util.Scanner;
 
 public class Main extends Thread{
 	public Main(){
@@ -10,14 +11,25 @@ public class Main extends Thread{
 		int burstTime[] = {31,38,7,46,22,36,17,18,27,35};
 		int priority[] = {15,20,9,5,5,5,5,5,5,5};
 		
-		MLFQ schedAlgo = new MLFQ();	
+		Scanner scan = new Scanner(System.in);
+		System.out.println("[1] Higher before lower");
+		System.out.println("[2] Fixed time slice");
+		System.out.print("Enter MLFQ choice: ");
 		
-	//	for(int a = 0; a < pID.length; a++){							//for randomizing pa ini, in the mean time, let's settle for 7 laanay para masayon pagcheck
-	//		ProcessControlBlock process = new ProcessControlBlock(pID[a], arrivalTime[a], burstTime[a], priority[a]);	
-	//		schedAlgo.addProcess(process);
-	//	}
-		schedAlgo.execute();
-		schedAlgo.getGanttChart().printContents();
+		int choice = scan.nextInt();
+		scan.nextLine();
+		
+		if(choice == 1){
+			MLFQ schedAlgo = new MLFQ(1);	
+			schedAlgo.execute();
+			schedAlgo.getGanttChart().printContents();
+		}else if(choice == 2){
+			MLFQ schedAlgo = new MLFQ(2);	
+			schedAlgo.execute();
+			schedAlgo.getGanttChart().printContents();
+		}else{
+			System.out.println("Invalid input");
+		}
 		
 	}
 	
