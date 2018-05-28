@@ -64,16 +64,42 @@ public class MLFQ {
 	public void execute() {
 		performanceChart = new GanttChart(processes);
 		int time = 0;
+		int previousRunQueue = -1;
+		boolean preempted = false;
+		int a = 0;
 		if(prioPolicy == 1) { //Higher Before Lower
-			while(true) {	
+			while(true) {
+				
 				if(processes.size() > 0 && time == processes.get(0).getArrivalTime()) {
 					mlfQueues[entryQueue-1].addProcess(processes.get(0));
 					processes.remove(0);
 				}
+				
+				a++;
+				
 				ProcessControlBlock output = null;
 				for(int i = 0; i < mlfQueues.length; i++) {
 					if(!mlfQueues[i].isEmptyQueue()) {
 						output = mlfQueues[i].executeScheduling();
+						
+						if(previousRunQueue > i && preempted){
+							mlfQueues[previousRunQueue - 1].addProcess(mlfQueues[previousRunQueue].removeFirstProcess());
+						}
+						
+						if(previousRunQueue != -1){
+							if(mlfQueues[previousRunQueue].isReplaced() && previousRunQueue != 0){
+								//previousRunQueue = i;
+								System.out.println("nayawaaaaaa" + a);
+								preempted = false;
+							}else{
+								//previousRunQueue = -1;
+								preempted = true;
+							}
+						}
+						
+						
+						previousRunQueue = i;
+						
 						performanceChart.addGTElement(output.getPID(), time);
 						
 						if(mlfQueues.length > 1 && schedAlgo[i] == 6 && !mlfQueues[i].isEmptyQueue() && mlfQueues[i].getppIndex() >= 0) {
@@ -82,13 +108,13 @@ public class MLFQ {
 									ProcessControlBlock temp = mlfQueues[i].getsQueue().remove(mlfQueues[i].getppIndex());
 									mlfQueues[i+1].addProcess(temp);
 								}
-							}else if(mlfQueues[i].getCurrentTimeSlice() > 0) { //promotion
+							}/*else if(mlfQueues[i].getCurrentTimeSlice() > 0) { //promotion
 									if((i - 1) >= 0) {
 										ProcessControlBlock temp = mlfQueues[i].getsQueue().remove(mlfQueues[i].getppIndex());
 										mlfQueues[i-1].addProcess(temp);
 									}
 
-							}
+							}*/
 						}
 						break;
 					}
