@@ -146,8 +146,13 @@ public class MLFQ {
 						output = mlfQueues[i].executeScheduling();
 						performanceChart.addGTElement(output.getPID(), time);
 						System.out.println("i: "+ i + "::" + output.getPID());
-						if((schedAlgo[i] == 3 || schedAlgo[i] == 5 || schedAlgo[i] == 6) && mlfQueues[i].isReplaced()) {
-							
+						if((schedAlgo[i] == 3 || schedAlgo[i] == 5 || schedAlgo[i] == 6) && mlfQueues[i].isReplaced() && mlfQueues[i].getppIndex() > -1) {
+							if((i - 1) >= 0) {
+								System.out.println("Promoted");
+								ProcessControlBlock temp = mlfQueues[i].getsQueue().remove(mlfQueues[i].getppIndex());
+								mlfQueues[i-1].addProcess(temp);
+								mlfQueues[i].resetPPIndex();
+							}
 						}
 /*						if(mlfQueues.length > 1 && schedAlgo[i] == 6 && !mlfQueues[i].isEmptyQueue() && mlfQueues[i].getppIndex() >= 0) { //For round robin preemption
 							if(mlfQueues[i].getCurrentTimeSlice() == 0) { //demotion

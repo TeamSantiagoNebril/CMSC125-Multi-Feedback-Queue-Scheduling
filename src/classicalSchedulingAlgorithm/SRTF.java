@@ -33,6 +33,7 @@ public class SRTF extends SchedulingAlgorithm{
 		if(processQueue.get(0).getBurstTime() > 0) {
 			processQueue.get(0).decBurstTime();
 			newRP = false;
+			ppIndex = -1;
 		}
 		
 		if(processQueue.get(0).getBurstTime() <= 0) {
