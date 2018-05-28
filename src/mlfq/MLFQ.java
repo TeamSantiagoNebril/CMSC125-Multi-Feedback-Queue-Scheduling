@@ -110,16 +110,19 @@ public class MLFQ {
 			int i = 0;
 			
 			while(true){
+				ProcessControlBlock output = null;
 				if(processes.size() > 0 && time == processes.get(0).getArrivalTime()) { //add process
 					mlfQueues[entryQueue-1].addProcess(processes.get(0));
 					processes.remove(0);
 				}
 				if(currentTimeSlice <= queueTimeSlot[i]) {
 					if(!mlfQueues[i].isEmptyQueue()){
-						System.out.println("i: "+ i + "::" + mlfQueues[i].executeScheduling().getPID());
-						//if() {
+						output = mlfQueues[i].executeScheduling();
+						performanceChart.addGTElement(output.getPID(), time);
+						System.out.println("i: "+ i + "::" + output.getPID());
+						if((schedAlgo[i] == 3 || schedAlgo[i] == 5 || schedAlgo[i] == 6) && mlfQueues[i].isReplaced()) {
 							
-						//}
+						}
 /*						if(mlfQueues.length > 1 && schedAlgo[i] == 6 && !mlfQueues[i].isEmptyQueue() && mlfQueues[i].getppIndex() >= 0) { //For round robin preemption
 							if(mlfQueues[i].getCurrentTimeSlice() == 0) { //demotion
 								if((i + 1) < mlfQueues.length) {
@@ -151,6 +154,14 @@ public class MLFQ {
 					}
 					currentTimeSlice++;
 				}else {
+					if(!mlfQueues[i].isEmptyQueue() && !mlfQueues[i].isReplaced()) { //demotion
+						if((i + 1) < mlfQueues.length) {
+							System.out.println("Demoted2");
+							ProcessControlBlock temp = mlfQueues[i].getsQueue().remove(0);
+							mlfQueues[i+1].addProcess(temp);
+							//mlfQueues[i].resetPPIndex(); 
+						}
+					}
 /*					if(mlfQueues.length > 1 && schedAlgo[i] == 6 && !mlfQueues[i].isEmptyQueue() && mlfQueues[i].getppIndex() >= 0) {
 						if(mlfQueues[i].getCurrentTimeSlice() == 0) { //demotion
 							if((i + 1) < mlfQueues.length) {

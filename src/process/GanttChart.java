@@ -36,6 +36,7 @@ public class GanttChart{
 	}
 	
 	public GanttChartElement getLastElement() {
+		System.out.println(ganttChartElements.size());
 		return ganttChartElements.get(ganttChartElements.size()-1);
 	}
 	

@@ -20,8 +20,14 @@ public class Prio extends SchedulingAlgorithm{
 		}
 		processQueue.add(e);
 		sortProcesses();
-		if(PID != processQueue.get(0).getPID()) {
+		if(PID != 0 && PID != processQueue.get(0).getPID()) {
 			newRP = true;
+			for(int i = 0; i < processQueue.size(); i++) {
+				if(processQueue.get(i).getPID() == PID) {
+					ppIndex = i;
+				}
+			}
+
 		}
 	}
 

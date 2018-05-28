@@ -10,8 +10,20 @@ public class SRTF extends SchedulingAlgorithm{
 	
 	@Override
 	public void addProcess(ProcessControlBlock e) {
+		int PID = 0;
+		if(processQueue.size() > 0) {
+			PID = processQueue.get(0).getPID();
+		}
 		processQueue.add(e);
 		sortProcesses();
+		if(PID != 0 && PID != processQueue.get(0).getPID()) {
+			newRP = true;
+			for(int i = 0; i < processQueue.size(); i++) {
+				if(processQueue.get(i).getPID() == PID) {
+					ppIndex = i;
+				}
+			}
+		}
 	}
 
 	@Override
