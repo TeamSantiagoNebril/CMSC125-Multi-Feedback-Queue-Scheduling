@@ -1,4 +1,4 @@
-package processInformation;
+package process;
 
 public class GanttChartElement {
 	
@@ -7,10 +7,10 @@ public class GanttChartElement {
 	private int EndTime;
 	private boolean isClosed = false;
 	
-	public GanttChartElement(int PID, int beginTime, int EndTime) {
+	public GanttChartElement(int PID, int beginTime) {
 		this.PID = PID;
 		this.beginTime = beginTime;
-		this.EndTime = EndTime;
+		this.EndTime = beginTime;
 		isClosed = false;
 	}
 	
@@ -36,6 +36,7 @@ public class GanttChartElement {
 	
 	public void close() {
 		isClosed = true;
+		incEndTime();
 	}
 	
 	public boolean isClose() {
