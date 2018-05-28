@@ -10,6 +10,7 @@ public class SchedulingAlgorithm {
 	protected boolean newRP;
 	protected ProcessControlBlock previousProcess;
 	protected int ppIndex;
+	protected int previousPID;
 	
 	public SchedulingAlgorithm() {
 		ppIndex = -1;
@@ -60,5 +61,9 @@ public class SchedulingAlgorithm {
 	
 	public int getCurrentTimeSlice() {
 		return currentCounter;
+	}
+	
+	public ProcessControlBlock removeFirstProcess() {
+		return processQueue.remove(0);
 	}
 }

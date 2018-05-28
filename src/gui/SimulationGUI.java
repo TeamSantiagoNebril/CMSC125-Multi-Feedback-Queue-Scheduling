@@ -204,7 +204,7 @@ public class SimulationGUI extends JFrame {
 		ganttChartArea.setEditable(false);
 		ganttChartArea.setForeground(Color.ORANGE);
 		ganttChartArea.setBackground(Color.BLACK);
-		//ganttChartArea.setText("");
+		ganttChartArea.setLineWrap(true);
 		
 		upperMain.add(ganttChartArea, BorderLayout.CENTER);
 		
@@ -221,7 +221,6 @@ public class SimulationGUI extends JFrame {
 		performanceLabels[0] = new JLabel("Turn Around Time: ");
 		performanceLabels[1] = new JLabel("Waiting Time:");
 		performanceLabels[2] = new JLabel("Response Time Time");
-		//performanceLabels[3] = new JLabel("CompletionTime");
 		
 		for(int i = 0; i < performanceLabels.length; i++) {
 			performanceLabels[i].setForeground(Color.ORANGE);

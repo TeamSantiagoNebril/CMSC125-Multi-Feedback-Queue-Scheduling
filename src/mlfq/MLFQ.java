@@ -58,7 +58,6 @@ public class MLFQ {
 			processes.add(new ProcessControlBlock(PIDs[i], arrivalTime[i], burstTime[i], priority[i]));
 			processes.sort((o1, o2) -> new Integer(o1.getArrivalTime()).compareTo(o2.getArrivalTime())); //sort asc based on arrival
 		}
-		//performanceChart initialization;
 	}
 	
 	
@@ -100,7 +99,9 @@ public class MLFQ {
 					break;
 				}
 			}
-		} else { //Fixed Time Slot
+		} else {
+			
+			//Fixed Time Slot
 			int[] queueTimeSlot = new int[mlfQueues.length]; //this block assigns timeslices on queues
 			int currentTimeSlice = 0;
 			for(int i = 0; i < queueTimeSlot.length; i++) {
@@ -116,7 +117,10 @@ public class MLFQ {
 				if(currentTimeSlice <= queueTimeSlot[i]) {
 					if(!mlfQueues[i].isEmptyQueue()){
 						System.out.println("i: "+ i + "::" + mlfQueues[i].executeScheduling().getPID());
-						if(mlfQueues.length > 1 && schedAlgo[i] == 6 && !mlfQueues[i].isEmptyQueue() && mlfQueues[i].getppIndex() >= 0) {
+						//if() {
+							
+						//}
+/*						if(mlfQueues.length > 1 && schedAlgo[i] == 6 && !mlfQueues[i].isEmptyQueue() && mlfQueues[i].getppIndex() >= 0) { //For round robin preemption
 							if(mlfQueues[i].getCurrentTimeSlice() == 0) { //demotion
 								if((i + 1) < mlfQueues.length) {
 									System.out.println("Demoted");
@@ -132,7 +136,9 @@ public class MLFQ {
 										mlfQueues[i].resetPPIndex();
 									}
 							}
-						}
+						} else if(mlfQueues.length > 1 && !mlfQueues[i].isEmptyQueue()) {
+							
+						}*/
 					}else {
 						if(checkifShouldEND()){
 							break;
@@ -145,7 +151,7 @@ public class MLFQ {
 					}
 					currentTimeSlice++;
 				}else {
-					if(mlfQueues.length > 1 && schedAlgo[i] == 6 && !mlfQueues[i].isEmptyQueue() && mlfQueues[i].getppIndex() >= 0) {
+/*					if(mlfQueues.length > 1 && schedAlgo[i] == 6 && !mlfQueues[i].isEmptyQueue() && mlfQueues[i].getppIndex() >= 0) {
 						if(mlfQueues[i].getCurrentTimeSlice() == 0) { //demotion
 							if((i + 1) < mlfQueues.length) {
 								System.out.println("Demoted2");
@@ -154,7 +160,7 @@ public class MLFQ {
 								mlfQueues[i].resetPPIndex(); 
 							}
 						}
-					}
+					}*/
 					currentTimeSlice = 0;
 					i++;
 					if(i == mlfQueues.length) {
@@ -169,10 +175,8 @@ public class MLFQ {
 				
 			}
 		}
-		//System.out.println("time"+time);
 		performanceChart.closeCurrentGantt(); //first before anything else for prope
 		performanceChart.processPerformance();
-		//performanceChart.printContents();
 	}
 	
 	public boolean checkifShouldEND() { // check if no process to be executed for Fixed Time Slot

@@ -12,7 +12,6 @@ public class SRTF extends SchedulingAlgorithm{
 	public void addProcess(ProcessControlBlock e) {
 		processQueue.add(e);
 		sortProcesses();
-		//System.out.println(processQueue.size());
 	}
 
 	@Override

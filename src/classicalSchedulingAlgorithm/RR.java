@@ -33,11 +33,17 @@ public class RR extends SchedulingAlgorithm{
 		currentCounter++;
 		if(currentCounter == timeSlice) {
 			currentCounter = 0;
+
 			if(!isEmptyQueue() && !newRP) {
+				int PID = processQueue.get(0).getPID();
 				ProcessControlBlock ee = processQueue.remove(0);
 				processQueue.add(ee);
 				ppIndex = processQueue.size()-1;
-				//System.out.println(ppIndex);
+				if(PID == processQueue.get(0).getPID()) {
+					newRP = false;
+				}else {
+					newRP = true;
+				}
 			}
 		}
 
