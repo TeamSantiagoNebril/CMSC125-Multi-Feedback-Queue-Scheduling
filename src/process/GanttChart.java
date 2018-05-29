@@ -1,12 +1,16 @@
 package process;
 
 import java.util.ArrayList;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import java.awt.Color;
+import java.awt.GridLayout;
 
 public class GanttChart{
 	
 	private ArrayList<GanttChartElement> ganttChartElements;
 	private ArrayList<ProcessControlBlock> processes;
-
+	private JPanel panel;
 	private float aveWaitTime;
 	private float aveTurnAroundTime;
 	private float aveResponseTime;
@@ -49,18 +53,66 @@ public class GanttChart{
 		}
 	}
 	
+	public void setPanel(JPanel panel){
+		this.panel = panel;
+	}
+	
 	public String printContents() {
 		String output = "";
+		Boolean start = true;
 
 		int line = 0;
 		for(int index = 0; index < ganttChartElements.size(); index++) {
 			GanttChartElement e = ganttChartElements.get(index);
+			if(start){
+				start = false;
+				JPanel timePanel = new JPanel(new GridLayout(2,1));
+				JPanel blank = new JPanel();
+				JPanel timeLabelPanel = new JPanel();
+				JLabel timeLabel = new JLabel(e.getBeginTime() + "");
+				
+				timePanel.setBackground(Color.BLACK);
+				blank.setBackground(Color.BLACK);
+				timeLabelPanel.setBackground(Color.BLACK);
+				timeLabel.setForeground(Color.WHITE);
+				
+				timeLabelPanel.add(timeLabel);
+				timePanel.add(blank);
+				timePanel.add(timeLabelPanel);
+				panel.add(timePanel);
+			}
+			
 			if(index == 0 || index != ganttChartElements.size()-1) {
-				output += "["+ e.getBeginTime()+"| P:"+e.getPID()+" |"+e.getEndTime()+"]";
+				//output += "["+ e.getBeginTime()+"| P:"+e.getPID()+" |"+e.getEndTime()+"]";
+				JPanel panel_proc = new JPanel();
+				panel_proc.setBackground(Color.WHITE);
+				JLabel label = new JLabel(e.getPID() + "");
+				panel_proc.add(label);
+				panel.add(panel_proc);
 			}
 			else {
-				output += "[E:"+ e.getBeginTime()+" P:"+e.getPID()+" D:"+e.getEndTime()+"]";
+				//output += "[E:"+ e.getBeginTime()+" P:"+e.getPID()+" D:"+e.getEndTime()+"]";
+				JPanel panel_proc = new JPanel();
+				panel_proc.setBackground(Color.WHITE);
+				JLabel label = new JLabel(e.getPID() + "");
+				panel_proc.add(label);
+				panel.add(panel_proc);
 			}
+			
+			JPanel timePanel = new JPanel(new GridLayout(2,1));
+			JPanel blank = new JPanel();
+			JPanel timeLabelPanel = new JPanel();
+			JLabel timeLabel = new JLabel(e.getEndTime() + "");
+			
+			timePanel.setBackground(Color.BLACK);
+			blank.setBackground(Color.BLACK);
+			timeLabelPanel.setBackground(Color.BLACK);
+			timeLabel.setForeground(Color.WHITE);
+			
+			timeLabelPanel.add(timeLabel);
+			timePanel.add(blank);
+			timePanel.add(timeLabelPanel);
+			panel.add(timePanel);
 
 			if(line == 4) {
 				line = 0;
@@ -68,7 +120,8 @@ public class GanttChart{
 				line++;
 			}
 		}
-		return output;
+		panel.revalidate();
+		return output; 
 	}
 	
 	public void closeCurrentGantt() {
@@ -88,7 +141,7 @@ public class GanttChart{
 		calculateTurnAroundTime();
 		calculateWaitingTime();
 		calculateResponseTime();
-		ganttChartResult = printContents();
+		//ganttChartResult = printContents();
 		System.out.println("average Turn Around Time: "+aveTurnAroundTime);
 		System.out.println("average Wait Time: "+aveWaitTime);
 		System.out.println("average Response Time: "+aveResponseTime);

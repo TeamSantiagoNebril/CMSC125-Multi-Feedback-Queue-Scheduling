@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -40,7 +41,7 @@ public class SimulationGUI extends JFrame {
 	
 	private JButton submitButton;
 	
-	private JTextArea ganttChartArea;
+	private JPanel ganttChartArea;
 
 	private JLabel[] performanceLabels;
 	private JTextField[] performanceTextFields;
@@ -200,11 +201,11 @@ public class SimulationGUI extends JFrame {
 		gtLabel.setFont(new Font("FREEDOM", Font.BOLD, 14));
 		upperMain.add(gtLabel, BorderLayout.NORTH);
 		
-		ganttChartArea = new JTextArea();
-		ganttChartArea.setEditable(false);
+		ganttChartArea = new JPanel(new FlowLayout());
+		//ganttChartArea.setEditable(false);
 		ganttChartArea.setForeground(Color.ORANGE);
 		ganttChartArea.setBackground(Color.BLACK);
-		ganttChartArea.setLineWrap(true);
+		//ganttChartArea.setLineWrap(true);
 		
 		upperMain.add(ganttChartArea, BorderLayout.CENTER);
 		
@@ -323,7 +324,16 @@ public class SimulationGUI extends JFrame {
 				mlfq.initProcesses(PIDs, AT, BT, PT);
 				mlfq.execute();
 				GanttChart res = mlfq.getPerformance();
-				ganttChartArea.setText("\t" + res.getOutput());
+				
+				res.setPanel(ganttChartArea);
+				res.printContents();
+				
+				//JPanel panel_proc = new JPanel();
+				//panel_proc.setBackground(Color.WHITE);
+				//JLabel label = new JLabel(e.getPID() + "");
+				///panel_proc.add(label);
+				//ganttChartArea.add(panel_proc);
+				
 				performanceTextFields[0].setText(res.getAveTurnAroundTime() + "");
 				performanceTextFields[1].setText(res.getAveWaitTime() + "");
 				performanceTextFields[2].setText(res.getAveResponseTime() + "");

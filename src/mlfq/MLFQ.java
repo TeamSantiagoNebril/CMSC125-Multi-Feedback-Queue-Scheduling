@@ -88,11 +88,8 @@ public class MLFQ {
 						
 						if(previousRunQueue != -1){
 							if(mlfQueues[previousRunQueue].isReplaced() && previousRunQueue != 0){
-								//previousRunQueue = i;
-								System.out.println("nayawaaaaaa" + a);
 								preempted = false;
 							}else{
-								//previousRunQueue = -1;
 								preempted = true;
 							}
 						}
