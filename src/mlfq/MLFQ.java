@@ -70,7 +70,7 @@ public class MLFQ {
 		if(prioPolicy == 1) { //Higher Before Lower
 			while(true) {
 				
-				if(processes.size() > 0 && time == processes.get(0).getArrivalTime()) {
+				while(processes.size() > 0 && time == processes.get(0).getArrivalTime()) {
 					mlfQueues[entryQueue-1].addProcess(processes.get(0));
 					processes.remove(0);
 				}
@@ -134,7 +134,7 @@ public class MLFQ {
 			
 			while(true){
 				ProcessControlBlock output = null;
-				if(processes.size() > 0 && time == processes.get(0).getArrivalTime()) { //add process
+				while(processes.size() > 0 && time == processes.get(0).getArrivalTime()) { //add process
 					mlfQueues[entryQueue-1].addProcess(processes.get(0));
 					processes.remove(0);
 				}
