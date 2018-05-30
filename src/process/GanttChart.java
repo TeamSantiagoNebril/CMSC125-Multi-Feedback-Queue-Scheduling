@@ -136,7 +136,6 @@ public class GanttChart{
 		calculateTurnAroundTime();
 		calculateWaitingTime();
 		calculateResponseTime();
-		//ganttChartResult = printContents();
 		System.out.println("average Turn Around Time: "+aveTurnAroundTime);
 		System.out.println("average Wait Time: "+aveWaitTime);
 		System.out.println("average Response Time: "+aveResponseTime);

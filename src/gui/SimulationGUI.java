@@ -324,7 +324,7 @@ public class SimulationGUI extends JFrame {
 				mlfq.initProcesses(PIDs, AT, BT, PT);
 				mlfq.execute();
 				GanttChart res = mlfq.getPerformance();
-				
+				ganttChartArea.removeAll();
 				res.setPanel(ganttChartArea);
 				res.printContents();
 				
