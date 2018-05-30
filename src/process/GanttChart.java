@@ -60,11 +60,13 @@ public class GanttChart{
 	public String printContents() {
 		String output = "";
 		Boolean start = true;
-
+		int lastProcEndTime = -1;
+		
 		int line = 0;
 		for(int index = 0; index < ganttChartElements.size(); index++) {
 			GanttChartElement e = ganttChartElements.get(index);
-			if(start){
+			
+			if(start || lastProcEndTime != e.getBeginTime()){
 				start = false;
 				JPanel timePanel = new JPanel(new GridLayout(2,1));
 				JPanel blank = new JPanel();
@@ -82,27 +84,20 @@ public class GanttChart{
 				panel.add(timePanel);
 			}
 			
-			if(index == 0 || index != ganttChartElements.size()-1) {
-				//output += "["+ e.getBeginTime()+"| P:"+e.getPID()+" |"+e.getEndTime()+"]";
-				JPanel panel_proc = new JPanel();
-				panel_proc.setBackground(Color.WHITE);
-				JLabel label = new JLabel(e.getPID() + "");
-				panel_proc.add(label);
-				panel.add(panel_proc);
-			}
-			else {
-				//output += "[E:"+ e.getBeginTime()+" P:"+e.getPID()+" D:"+e.getEndTime()+"]";
-				JPanel panel_proc = new JPanel();
-				panel_proc.setBackground(Color.WHITE);
-				JLabel label = new JLabel(e.getPID() + "");
-				panel_proc.add(label);
-				panel.add(panel_proc);
-			}
+			
+			//output += "["+ e.getBeginTime()+"| P:"+e.getPID()+" |"+e.getEndTime()+"]";
+			JPanel panel_proc = new JPanel();
+			panel_proc.setBackground(Color.WHITE);
+			JLabel label = new JLabel(e.getPID() + "");
+			panel_proc.add(label);
+			panel.add(panel_proc);
 			
 			JPanel timePanel = new JPanel(new GridLayout(2,1));
 			JPanel blank = new JPanel();
 			JPanel timeLabelPanel = new JPanel();
 			JLabel timeLabel = new JLabel(e.getEndTime() + "");
+			
+			lastProcEndTime = e.getEndTime();
 			
 			timePanel.setBackground(Color.BLACK);
 			blank.setBackground(Color.BLACK);
