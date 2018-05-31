@@ -40,7 +40,6 @@ public class GanttChart{
 	}
 	
 	public GanttChartElement getLastElement() {
-		System.out.println(ganttChartElements.size());
 		return ganttChartElements.get(ganttChartElements.size()-1);
 	}
 	
@@ -136,9 +135,6 @@ public class GanttChart{
 		calculateTurnAroundTime();
 		calculateWaitingTime();
 		calculateResponseTime();
-		System.out.println("average Turn Around Time: "+aveTurnAroundTime);
-		System.out.println("average Wait Time: "+aveWaitTime);
-		System.out.println("average Response Time: "+aveResponseTime);
 	}
 	
 	float[] completionTime;
@@ -182,7 +178,7 @@ public class GanttChart{
 		for(int i = 0; i < processes.size(); i++) {
 			for(int j = 0; j < ganttChartElements.size(); j++) {
 				if(processes.get(i).getPID() == ganttChartElements.get(j).getPID()) {
-					responseTime[i] = ganttChartElements.get(j).getBeginTime();
+					responseTime[i] = ganttChartElements.get(j).getBeginTime() - processes.get(i).getArrivalTime();
 					break;
 				}
 			}

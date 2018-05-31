@@ -13,21 +13,6 @@ public class Main {
 	public static void main(String[] args) {
 		
 		SimulationGUI s = new SimulationGUI();
-		
-		/*int[] PIDs = {1,2,3};
-		int[] AT = {0,1,2};
-		int[] BT = {24,3,3};
-		int[] PT = {3,1,4};
-		
-		int numQ = 3;
-		int[] shedAlgo = {3,5,6};
-		int prioPolicy = 2;
-		int[] timeSlices = {3};
-		int entry = 1;
-		MLFQ z = new MLFQ(numQ, shedAlgo, prioPolicy, timeSlices, entry);
-		z.initProcesses(PIDs, AT, BT, PT);
-		z.execute();
-		*/
 	}
 
 }

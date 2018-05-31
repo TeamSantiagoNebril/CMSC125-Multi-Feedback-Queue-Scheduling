@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -49,7 +50,14 @@ public class SimulationGUI extends JFrame {
 	public SimulationGUI() {
 		super("MultiLevel Feedback Queue Analyzer");
 		setLayout(new BorderLayout());
-	    setSize(1000, 550);
+		Toolkit tk = Toolkit.getDefaultToolkit();
+		int xSize = ((int) tk.getScreenSize().getWidth());
+		int ySize = ((int) tk.getScreenSize().getHeight());
+		setSize(xSize,ySize);
+		//setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		//setUndecorated(true);
+		//setVisible(true);
+		//setSize(1000, 550);
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setResizable(false);
 	    setLocationRelativeTo(null);
@@ -202,6 +210,7 @@ public class SimulationGUI extends JFrame {
 		upperMain.add(gtLabel, BorderLayout.NORTH);
 		
 		ganttChartArea = new JPanel(new FlowLayout());
+		ganttChartArea.setAutoscrolls(true);
 		//ganttChartArea.setEditable(false);
 		ganttChartArea.setForeground(Color.ORANGE);
 		ganttChartArea.setBackground(Color.BLACK);
@@ -278,8 +287,6 @@ public class SimulationGUI extends JFrame {
 					totalrr++;
 				}
 			}
-			System.out.println(timeSlices.length);
-			System.out.println(totalrr);
 			boolean allPositive = true;
 			if((v == w && w == x && x == y) == false) { //all input are NOT of equal length
 				allPositive = false;
