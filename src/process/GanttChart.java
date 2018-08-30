@@ -56,7 +56,7 @@ public class GanttChart{
 		this.panel = panel;
 	}
 	
-	public String printContents() {
+	/*public String printContents() {
 		String output = "";
 		Boolean start = true;
 		int lastProcEndTime = -1;
@@ -116,7 +116,7 @@ public class GanttChart{
 		}
 		panel.revalidate();
 		return output; 
-	}
+	}*/
 	
 	public void closeCurrentGantt() {
 		getLastElement().close();
@@ -165,7 +165,6 @@ public class GanttChart{
 	public void calculateWaitingTime() {
 		float sumOfWaitingTime = 0;
 		for(int i = 0; i < completionTime.length; i++) {
-			//System.out.println("ct: "+ completionTime[i] +" at" + processes.get(i).getArrivalTime() + "tt: " + trnArndTime[i] + " bt: " + processes.get(i).getBurstTime());
 			waitingTime[i] = (trnArndTime[i] - processes.get(i).getBurstTime());
 			sumOfWaitingTime += waitingTime[i];
 		}

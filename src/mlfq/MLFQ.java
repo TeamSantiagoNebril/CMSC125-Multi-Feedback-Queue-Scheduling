@@ -9,10 +9,11 @@ import classicalSchedulingAlgorithm.RR;
 import classicalSchedulingAlgorithm.SJF;
 import classicalSchedulingAlgorithm.SRTF;
 import classicalSchedulingAlgorithm.SchedulingAlgorithm;
+import gui.MLFQSimulatorGUI;
 import process.GanttChart;
 import process.ProcessControlBlock;
 
-public class MLFQ {
+public class MLFQ extends Thread{
 
 	private SchedulingAlgorithm[] mlfQueues;
 	private int prioPolicy;
@@ -61,13 +62,14 @@ public class MLFQ {
 	}
 	
 	
-	public void execute() {
+	public void run() {
 		performanceChart = new GanttChart(processes);
 		int time = 0;
 		int previousRunQueue = -1;
 		boolean preempted = false;
 		int a = 0;
-		if(prioPolicy == 1) { //Higher Before Lower
+		if(prioPolicy == 0) { //Higher Before Lower
+			
 			while(true) {
 				
 				while(processes.size() > 0 && time == processes.get(0).getArrivalTime()) {
@@ -76,9 +78,12 @@ public class MLFQ {
 				}
 				
 				a++;
-				
+
+				MLFQSimulatorGUI.addLabel(time);
+			
 				ProcessControlBlock output = null;
 				for(int i = 0; i < mlfQueues.length; i++) {
+					
 					if(!mlfQueues[i].isEmptyQueue()) {
 						output = mlfQueues[i].executeScheduling();
 						
@@ -98,6 +103,8 @@ public class MLFQ {
 						previousRunQueue = i;
 						
 						performanceChart.addGTElement(output.getPID(), time);
+						//MLFQSimulatorGUI.addLabel(time, false);
+						//previouslyExecutedProcess = true;
 						
 						if(mlfQueues.length > 1 && schedAlgo[i] == 6 && !mlfQueues[i].isEmptyQueue() && mlfQueues[i].getppIndex() >= 0) {
 							if(mlfQueues[i].getCurrentTimeSlice() == 0) { //demotion
@@ -109,6 +116,13 @@ public class MLFQ {
 						}
 						break;
 					}
+				}
+				
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				
 				time++;
@@ -168,6 +182,13 @@ public class MLFQ {
 					}
 				}
 				
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				time++;
 				if(checkifShouldEND()){
 					break;
@@ -177,6 +198,10 @@ public class MLFQ {
 		}
 		performanceChart.closeCurrentGantt(); //first before anything else for prope
 		performanceChart.processPerformance();
+		
+		MLFQSimulatorGUI.setResponseTime(performanceChart.getAveResponseTime());
+		MLFQSimulatorGUI.setWaitingTime(performanceChart.getAveWaitTime());
+		MLFQSimulatorGUI.setTurnAroundTime(performanceChart.getAveTurnAroundTime());
 	}
 	
 	public boolean checkifShouldEND() { // check if no process to be executed for Fixed Time Slot

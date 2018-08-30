@@ -1,6 +1,8 @@
 package classicalSchedulingAlgorithm;
 
+import gui.MLFQSimulatorGUI;
 import process.ProcessControlBlock;
+import utility.Block;
 
 public class FCFS extends SchedulingAlgorithm{
 
@@ -18,6 +20,7 @@ public class FCFS extends SchedulingAlgorithm{
 	public ProcessControlBlock executeScheduling() {
 		ProcessControlBlock r = null;
 		r = processQueue.get(0);
+		MLFQSimulatorGUI.addBlock(new Block(processQueue.get(0).getPID()));
 		if(processQueue.get(0).getBurstTime() > 0) {
 			processQueue.get(0).decBurstTime();
 			newRP = false;
