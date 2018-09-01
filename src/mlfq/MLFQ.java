@@ -103,8 +103,6 @@ public class MLFQ extends Thread{
 						previousRunQueue = i;
 						
 						performanceChart.addGTElement(output.getPID(), time);
-						//MLFQSimulatorGUI.addLabel(time, false);
-						//previouslyExecutedProcess = true;
 						
 						if(mlfQueues.length > 1 && schedAlgo[i] == 6 && !mlfQueues[i].isEmptyQueue() && mlfQueues[i].getppIndex() >= 0) {
 							if(mlfQueues[i].getCurrentTimeSlice() == 0) { //demotion
@@ -119,19 +117,18 @@ public class MLFQ extends Thread{
 				}
 				
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(100);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
 				time++;
 				if(checkifShouldEND()) {
+					MLFQSimulatorGUI.addLabel(time);
 					break;
 				}
 			}
 		} else {
-			
 			//Fixed Time Slot
 			int[] queueTimeSlot = new int[mlfQueues.length]; //this block assigns timeslices on queues
 			int currentTimeSlice = 0;
@@ -146,7 +143,9 @@ public class MLFQ extends Thread{
 					mlfQueues[entryQueue-1].addProcess(processes.get(0));
 					processes.remove(0);
 				}
+				
 				if(currentTimeSlice <= queueTimeSlot[i]) {
+					MLFQSimulatorGUI.addLabel(time);
 					if(!mlfQueues[i].isEmptyQueue()){
 						output = mlfQueues[i].executeScheduling();
 						performanceChart.addGTElement(output.getPID(), time);
@@ -157,17 +156,47 @@ public class MLFQ extends Thread{
 								mlfQueues[i].resetPPIndex();
 							}
 						}
+
+						try {
+							Thread.sleep(200);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						
+						currentTimeSlice++;
+						time++;
 					}else {
 						if(checkifShouldEND()){
+							MLFQSimulatorGUI.addLabel(time);
 							break;
 						}
 						currentTimeSlice = 0;
-						i++;
+						i++; 
 						if(i == mlfQueues.length) {
 							i = 0;
 						}
+						
+						int ctr = 0;
+						for(int j = 0; j < mlfQueues.length; j++) {
+							if(mlfQueues[j].isEmptyQueue()) {
+								ctr++;
+							}
+						}
+						
+						if(ctr != 0) {
+
+							try {
+								Thread.sleep(200);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							
+							currentTimeSlice++;
+							time++;
+						}
+						
 					}
-					currentTimeSlice++;
+					
 				}else {
 					if(!mlfQueues[i].isEmptyQueue() && !mlfQueues[i].isReplaced()) { //demotion
 						if((i + 1) < mlfQueues.length) {
@@ -181,27 +210,16 @@ public class MLFQ extends Thread{
 						i = 0;
 					}
 				}
-				
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				time++;
 				if(checkifShouldEND()){
+					MLFQSimulatorGUI.addLabel(time);
 					break;
 				}
-				
 			}
 		}
-		performanceChart.closeCurrentGantt(); //first before anything else for prope
+		performanceChart.closeCurrentGantt(); 
 		performanceChart.processPerformance();
 		
-		MLFQSimulatorGUI.setResponseTime(performanceChart.getAveResponseTime());
-		MLFQSimulatorGUI.setWaitingTime(performanceChart.getAveWaitTime());
-		MLFQSimulatorGUI.setTurnAroundTime(performanceChart.getAveTurnAroundTime());
+		MLFQSimulatorGUI.setPerformance(performanceChart.getAveResponseTime(), performanceChart.getAveWaitTime(), performanceChart.getAveTurnAroundTime());
 	}
 	
 	public boolean checkifShouldEND() { // check if no process to be executed for Fixed Time Slot

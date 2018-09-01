@@ -34,6 +34,8 @@ public class MLFQSimulatorGUI extends JFrame implements ActionListener{
 	private RoundEdgedPanel mlfqPanel;
 	private RoundEdgedPanel additionalConfigPanel;
 	
+	private static JScrollPane scrollPane;
+	
 	private JPanel bottomPanel, mainPanel, processesContainer, mlfqContainer;
 	private static JPanel chartContainer, labelContainer, subChartContainer;
 	
@@ -46,7 +48,8 @@ public class MLFQSimulatorGUI extends JFrame implements ActionListener{
 	
 	private JFormattedTextField numProcesses, numQueues, timeSlice[];
 	
-	private JButton generateProcesses, generateQueues, start, clearAll, clearProcesses, clearQueues, randomize;
+	private JButton generateProcesses, generateQueues, clearProcesses, clearQueues, randomize;
+	private static JButton start, clearAll;
 	
 	private JComboBox<String> prioPolicy;
 	private String prioPolicyList[] = {"Higher Before Lower", "Fixed Time Slot"};
@@ -102,14 +105,14 @@ public class MLFQSimulatorGUI extends JFrame implements ActionListener{
 		ganttChartPanel.setLayout(new MigLayout("fillx"));
 		
 		chartContainer = new JPanel(new MigLayout("fillx"));
-		JScrollPane scrollPane = new JScrollPane(chartContainer);
+		scrollPane = new JScrollPane(chartContainer);
 		scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		ganttChartPanel.add(scrollPane, "width 100%, height 100%");
 		
 		subChartContainer = new JPanel(new MigLayout("fillx"));
-		chartContainer.add(subChartContainer, "height 15%, wrap");
+		chartContainer.add(subChartContainer, "height 15%, wrap, gapTop 75px");
 		
 		labelContainer = new JPanel(new MigLayout("fillx"));
 		chartContainer.add(labelContainer, "height 15%");
@@ -230,7 +233,7 @@ public class MLFQSimulatorGUI extends JFrame implements ActionListener{
 	
 	public static void addLabel(int time) {
 		Label label = new Label(font1, time + "");			
-		if(time == 0 || previouslyExecutedProcess) {
+		if(time == 0 || !previouslyExecutedProcess) {
 			labelContainer.add(label);
 		}else{	
 			int distance;
@@ -246,23 +249,26 @@ public class MLFQSimulatorGUI extends JFrame implements ActionListener{
 		labelCount++;
 		labelContainer.repaint();
 		labelContainer.revalidate();
+		scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum());
 		previouslyExecutedProcess = false;
 	}
 	
-	public static void setResponseTime(float responseTime) {
+	public static void setPerformance(float responseTime, float waitingTime, float turnAroundTime) {
 		aveResponseTime.setText(responseTime + "");
-	}
-	
-	public static void setWaitingTime(float waitingTime) {
 		aveWaitTime.setText(waitingTime + "");
-	}
-	
-	public static void setTurnAroundTime(float turnAroundTime) {
 		aveTurnAroundTime.setText(turnAroundTime + "");
+		
+		start.setEnabled(true);
+		clearAll.setEnabled(true);
 	}
 	
 	public static void addBlock(Block block) {
 		
+		try {
+			Thread.sleep(20);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
 		
 		if(labelCount - 1 != blockCount) {	
 			int distance;
@@ -272,6 +278,9 @@ public class MLFQSimulatorGUI extends JFrame implements ActionListener{
 				distance = (recentLabel.getX() + recentLabel.getWidth()) ;
 			}
 			subChartContainer.add(block, "gapLeft " + distance + "px");
+			blockCount = labelCount -1;
+		}else {
+			subChartContainer.add(block);
 		}
 		
 		blockCount++;
@@ -279,6 +288,7 @@ public class MLFQSimulatorGUI extends JFrame implements ActionListener{
 		recentBlock = block;
 		subChartContainer.repaint();
 		subChartContainer.revalidate();
+		scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum());
 		previouslyExecutedProcess = true;
 		try {
 			Thread.sleep(10);
@@ -293,7 +303,7 @@ public class MLFQSimulatorGUI extends JFrame implements ActionListener{
 			if(numProcesses.getText().equals("")) {
 				JOptionPane.showMessageDialog(null, "Fill out required fields for this function", "Message", JOptionPane.ERROR_MESSAGE);
 			}else {
-				
+				numProcesses.setEnabled(false);
 				generateProcesses.setEnabled(false);
 				randomize.setEnabled(false);
 				clearProcesses.setEnabled(true);
@@ -312,7 +322,7 @@ public class MLFQSimulatorGUI extends JFrame implements ActionListener{
 				for(int a = 0; a < size; a++) {
 					processesContainer.add(new Label(font1, "Process " + a), "align center");
 					
-					arrival[a] = new JFormattedTextField(new Formatter(50));
+					arrival[a] = new JFormattedTextField(new Formatter(0, 50));
 					arrival[a].setColumns(7);
 					processesContainer.add(arrival[a], "align center");
 					
@@ -333,7 +343,7 @@ public class MLFQSimulatorGUI extends JFrame implements ActionListener{
 			if(numQueues.getText().equals("")) {
 				JOptionPane.showMessageDialog(null, "Fill out required fields for this function", "Message", JOptionPane.ERROR_MESSAGE);
 			}else {
-				
+				numQueues.setEnabled(false);
 				generateQueues.setEnabled(false);
 				
 				int size = Integer.parseInt(numQueues.getText());
@@ -368,8 +378,11 @@ public class MLFQSimulatorGUI extends JFrame implements ActionListener{
 				JOptionPane.showMessageDialog(null, "You have not generated queues yet", "Message", JOptionPane.ERROR_MESSAGE);
 			}else if(entryQueue.getText().equals("")) {
 				JOptionPane.showMessageDialog(null, "Fill out entry queue field!", "Message", JOptionPane.ERROR_MESSAGE);
+			}else if(Integer.parseInt(entryQueue.getText()) > Integer.parseInt(numQueues.getText())) {
+				JOptionPane.showMessageDialog(null, "Entry queue exceeds the number of generated queues", "Message", JOptionPane.ERROR_MESSAGE);
 			}else {
-				
+				subChartContainer.removeAll();
+				labelContainer.removeAll();
 				int mlfqSize = Integer.parseInt(numQueues.getText());
 				int[] algo = new int[mlfqSize], slice = new int[mlfqSize];
 				
@@ -399,6 +412,9 @@ public class MLFQSimulatorGUI extends JFrame implements ActionListener{
 					MLFQ mlfq = new MLFQ(Integer.parseInt(numQueues.getText()), algo, prioPolicy.getSelectedIndex(), slice, Integer.parseInt(entryQueue.getText()));
 					mlfq.initProcesses(PIDs, AT, BT, PT);
 					mlfq.start();
+					
+					start.setEnabled(false);
+					clearAll.setEnabled(false);
 					
 				}catch(NumberFormatException ex) {
 					JOptionPane.showMessageDialog(null, "Fill out all fields!", "Message", JOptionPane.ERROR_MESSAGE);
@@ -434,11 +450,17 @@ public class MLFQSimulatorGUI extends JFrame implements ActionListener{
 			generateQueues.setEnabled(true);
 			randomize.setEnabled(true);
 			
+			clearProcesses.setEnabled(false);
+			clearQueues.setEnabled(false);
+			
+			numQueues.setEnabled(true);
+			numProcesses.setEnabled(true);
+			
 		}else if(e.getSource() == randomize) {
 			if(numProcesses.getText().equals("")) {
 				JOptionPane.showMessageDialog(null, "Fill out required fields for this function", "Message", JOptionPane.ERROR_MESSAGE);
 			}else {
-				
+				numProcesses.setEnabled(false);
 				generateProcesses.setEnabled(false);
 				randomize.setEnabled(false);
 				clearProcesses.setEnabled(true);
@@ -482,6 +504,8 @@ public class MLFQSimulatorGUI extends JFrame implements ActionListener{
 			processesContainer.repaint();
 			processesContainer.revalidate();
 			
+			clearProcesses.setEnabled(false);
+			numProcesses.setEnabled(true);
 			generateProcesses.setEnabled(true);
 			randomize.setEnabled(true);
 			
@@ -490,6 +514,8 @@ public class MLFQSimulatorGUI extends JFrame implements ActionListener{
 			mlfqContainer.repaint();
 			mlfqContainer.revalidate();
 			
+			clearQueues.setEnabled(false);
+			numQueues.setEnabled(true);
 			generateQueues.setEnabled(true);
 			
 		}else {
