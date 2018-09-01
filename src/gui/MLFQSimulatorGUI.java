@@ -112,7 +112,7 @@ public class MLFQSimulatorGUI extends JFrame implements ActionListener{
 		ganttChartPanel.add(scrollPane, "width 100%, height 100%");
 		
 		subChartContainer = new JPanel(new MigLayout("fillx"));
-		chartContainer.add(subChartContainer, "height 15%, wrap, gapTop 75px");
+		chartContainer.add(subChartContainer, "height 20%, wrap, gapTop 75px");
 		
 		labelContainer = new JPanel(new MigLayout("fillx"));
 		chartContainer.add(labelContainer, "height 15%");
