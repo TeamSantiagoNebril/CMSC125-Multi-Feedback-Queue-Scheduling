@@ -80,7 +80,7 @@ public class MLFQ extends Thread{
 				a++;
 
 				MLFQSimulatorGUI.addLabel(time);
-			
+				
 				ProcessControlBlock output = null;
 				for(int i = 0; i < mlfQueues.length; i++) {
 					
@@ -98,7 +98,6 @@ public class MLFQ extends Thread{
 								preempted = true;
 							}
 						}
-						
 						
 						previousRunQueue = i;
 						

@@ -12,8 +12,10 @@ import net.miginfocom.swing.MigLayout;
 public class Block extends JPanel{
 
 	private static final long serialVersionUID = -4627353772145679363L;
-
+	private int processID;
+	
 	public Block(int processID) {
+		this.processID = processID;
 		setLayout(new MigLayout("fillx"));
 		setBorder(BorderFactory.createLineBorder(Color.GRAY));
 		setBackground(new Color(230, 230, 230));
@@ -22,4 +24,9 @@ public class Block extends JPanel{
 		setSize(100, 100);
 		setVisible(true);
 	}
+	
+	public int getProcessID() {
+		return processID;
+	}
+	
 }

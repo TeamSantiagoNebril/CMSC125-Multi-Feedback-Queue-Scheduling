@@ -265,7 +265,7 @@ public class MLFQSimulatorGUI extends JFrame implements ActionListener{
 	public static void addBlock(Block block) {
 		
 		try {
-			Thread.sleep(20);
+			Thread.sleep(30);
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}

@@ -23,18 +23,19 @@ public class RR extends SchedulingAlgorithm{
 		ppIndex = -1;
 		ProcessControlBlock r = null;
 		r = processQueue.get(0);
+		
 		MLFQSimulatorGUI.addBlock(new Block(processQueue.get(0).getPID()));
-		if(processQueue.get(0).getBurstTime() > 0) {
+		if(r.getBurstTime() > 0) { //is executed when the process has not used up its alloted time yet and burst time is not yet zero
 			processQueue.get(0).decBurstTime();
 			newRP = false;
 			ppIndex = -1;
+			currentCounter++;
 		}
-		if(processQueue.get(0).getBurstTime() == 0) {
+		if(r.getBurstTime() == 0) { //is executed when the process has not used up its alloted time yet and burst time is zero
 			processQueue.remove(0);
 			currentCounter = 0;
 			newRP = true;
 		}
-		currentCounter++;
 		if(currentCounter == timeSlice) {
 			currentCounter = 0;
 
@@ -50,8 +51,6 @@ public class RR extends SchedulingAlgorithm{
 				}
 			}
 		}
-
 		return r;
 	}
-	
 }
