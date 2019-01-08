@@ -6,6 +6,9 @@ import utility.Block;
 
 public class RR extends SchedulingAlgorithm{
 	
+	private boolean toAddProcessFlag = false;
+	private ProcessControlBlock addProcess;
+	
 	public RR(int timeSlice) {
 		super();
 		currentCounter = 0;
@@ -24,6 +27,12 @@ public class RR extends SchedulingAlgorithm{
 		ProcessControlBlock r = null;
 		r = processQueue.get(0);
 		
+		if(toAddProcessFlag){
+			processQueue.add(addProcess);
+		}
+		
+		toAddProcessFlag = false;
+
 		MLFQSimulatorGUI.addBlock(new Block(processQueue.get(0).getPID()));
 		if(r.getBurstTime() > 0) { //is executed when the process has not used up its alloted time yet and burst time is not yet zero
 			processQueue.get(0).decBurstTime();
@@ -42,6 +51,17 @@ public class RR extends SchedulingAlgorithm{
 			if(!isEmptyQueue() && !newRP) {
 				int PID = processQueue.get(0).getPID();
 				ProcessControlBlock ee = processQueue.remove(0);
+				addProcess = ee;
+				toAddProcessFlag = true;
+				ppIndex = processQueue.size()-1;
+				if(PID == r.getPID()) {
+					newRP = false;
+				}else {
+					newRP = true;
+				}
+			}/*else if(!isEmptyQueue() && !newRP) {
+				int PID = processQueue.get(0).getPID();
+				ProcessControlBlock ee = processQueue.remove(0);
 				processQueue.add(ee);
 				ppIndex = processQueue.size()-1;
 				if(PID == processQueue.get(0).getPID()) {
@@ -49,8 +69,10 @@ public class RR extends SchedulingAlgorithm{
 				}else {
 					newRP = true;
 				}
-			}
+			}*/
 		}
 		return r;
 	}
+	
+	
 }

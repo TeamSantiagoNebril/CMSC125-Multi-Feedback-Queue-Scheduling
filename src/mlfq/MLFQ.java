@@ -71,7 +71,6 @@ public class MLFQ extends Thread{
 		if(prioPolicy == 0) { //Higher Before Lower
 			
 			while(true) {
-				
 				while(processes.size() > 0 && time == processes.get(0).getArrivalTime()) {
 					mlfQueues[entryQueue-1].addProcess(processes.get(0));
 					processes.remove(0);
@@ -116,7 +115,7 @@ public class MLFQ extends Thread{
 				}
 				
 				try {
-					Thread.sleep(100);
+					Thread.sleep(50);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

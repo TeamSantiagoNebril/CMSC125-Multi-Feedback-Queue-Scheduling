@@ -288,7 +288,7 @@ public class MLFQSimulatorGUI extends JFrame implements ActionListener{
 		recentBlock = block;
 		subChartContainer.repaint();
 		subChartContainer.revalidate();
-		scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum());
+		//scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getMaximum());
 		previouslyExecutedProcess = true;
 		try {
 			Thread.sleep(10);
