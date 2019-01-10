@@ -32,7 +32,7 @@ public class SchedulingAlgorithm {
 	}
 	
 	public void setPendingAdditionToFalse() {
-		pendingAddition = false;
+		
 	}
 	
 	public ArrayList<ProcessControlBlock> getsQueue() {

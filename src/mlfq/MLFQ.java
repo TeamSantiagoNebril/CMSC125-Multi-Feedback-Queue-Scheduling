@@ -113,20 +113,20 @@ public class MLFQ extends Thread{
 						
 						performanceChart.addGTElement(output.getPID(), time);
 						
-						if(mlfQueues.length > 1 && schedAlgo[i] == 6 && mlfQueues[i].getppIndex() >= 0) {
-							if(!mlfQueues[i].isEmptyQueue()) {
+						if(mlfQueues.length > 1 && schedAlgo[i] == 6 /*&& mlfQueues[i].getppIndex() >= 0*/) {
+							
+							if(mlfQueues[i].hasPendingAddition()) {
+								if((i + 1) < mlfQueues.length) {
+									//ProcessControlBlock temp = mlfQueues[i].getsQueue().remove(mlfQueues[i].getppIndex());
+									mlfQueues[i+1].addProcess(mlfQueues[i].getPendingAdditionProcess());
+									mlfQueues[i].setPendingAdditionToFalse();
+								}
+							}else if(!mlfQueues[i].isEmptyQueue()) {
 								if(mlfQueues[i].getCurrentTimeSlice() == 0) { //demotion
 									if((i + 1) < mlfQueues.length) {
 										ProcessControlBlock temp = mlfQueues[i].getsQueue().remove(mlfQueues[i].getppIndex());
 										mlfQueues[i+1].addProcess(temp);
 									}
-								}
-							}else if(mlfQueues[i].hasPendingAddition()) {
-								if((i + 1) < mlfQueues.length) {
-									System.out.println("here");
-									//ProcessControlBlock temp = mlfQueues[i].getsQueue().remove(mlfQueues[i].getppIndex());
-									mlfQueues[i+1].addProcess(mlfQueues[i].getPendingAdditionProcess());
-									mlfQueues[i].setPendingAdditionToFalse();
 								}
 							}
 						}

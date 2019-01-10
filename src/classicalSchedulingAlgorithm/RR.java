@@ -17,6 +17,11 @@ public class RR extends SchedulingAlgorithm{
 		processQueue.add(e);
 	}
 
+	public void setPendingAdditionToFalse() {
+		
+		pendingAddition = false;
+	}
+	
 	@Override
 	public ProcessControlBlock executeScheduling() {
 		ppIndex = -1;
@@ -46,7 +51,6 @@ public class RR extends SchedulingAlgorithm{
 			currentCounter = 0;
 
 			if(!isEmptyQueue() && !newRP) {
-				
 				int PID = processQueue.get(0).getPID();
 				ProcessControlBlock ee = processQueue.remove(0);
 				addProcess = ee;
