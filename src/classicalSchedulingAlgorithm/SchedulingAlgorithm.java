@@ -12,6 +12,9 @@ public class SchedulingAlgorithm {
 	protected int ppIndex;
 	protected int previousPID;
 	protected boolean pendingAddition;
+
+	protected ProcessControlBlock addProcess;
+	
 	
 	public SchedulingAlgorithm() {
 		ppIndex = -1;
@@ -20,9 +23,16 @@ public class SchedulingAlgorithm {
 	}
 	
 	public boolean hasPendingAddition() {
-		boolean temp = pendingAddition;
+		
+		return pendingAddition;
+	}
+	
+	public ProcessControlBlock getPendingAdditionProcess() {
+		return addProcess;
+	}
+	
+	public void setPendingAdditionToFalse() {
 		pendingAddition = false;
-		return temp;
 	}
 	
 	public ArrayList<ProcessControlBlock> getsQueue() {
@@ -67,7 +77,7 @@ public class SchedulingAlgorithm {
 	}
 	
 	public int getCurrentTimeSlice() {
-		return currentCounter;
+		return timeSlice - currentCounter;
 	}
 	
 	public ProcessControlBlock removeFirstProcess() {

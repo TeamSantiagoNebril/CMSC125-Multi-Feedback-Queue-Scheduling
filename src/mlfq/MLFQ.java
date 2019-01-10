@@ -81,7 +81,6 @@ public class MLFQ extends Thread{
 				
 				System.out.println("Loop #" + a);
 				
-				
 				MLFQSimulatorGUI.addLabel(time);
 				
 				ProcessControlBlock output = null;
@@ -114,11 +113,20 @@ public class MLFQ extends Thread{
 						
 						performanceChart.addGTElement(output.getPID(), time);
 						
-						if(mlfQueues.length > 1 && schedAlgo[i] == 6 && !mlfQueues[i].isEmptyQueue() && mlfQueues[i].getppIndex() >= 0) {
-							if(mlfQueues[i].getCurrentTimeSlice() == 0) { //demotion
+						if(mlfQueues.length > 1 && schedAlgo[i] == 6 && mlfQueues[i].getppIndex() >= 0) {
+							if(!mlfQueues[i].isEmptyQueue()) {
+								if(mlfQueues[i].getCurrentTimeSlice() == 0) { //demotion
+									if((i + 1) < mlfQueues.length) {
+										ProcessControlBlock temp = mlfQueues[i].getsQueue().remove(mlfQueues[i].getppIndex());
+										mlfQueues[i+1].addProcess(temp);
+									}
+								}
+							}else if(mlfQueues[i].hasPendingAddition()) {
 								if((i + 1) < mlfQueues.length) {
-									ProcessControlBlock temp = mlfQueues[i].getsQueue().remove(mlfQueues[i].getppIndex());
-									mlfQueues[i+1].addProcess(temp);
+									System.out.println("here");
+									//ProcessControlBlock temp = mlfQueues[i].getsQueue().remove(mlfQueues[i].getppIndex());
+									mlfQueues[i+1].addProcess(mlfQueues[i].getPendingAdditionProcess());
+									mlfQueues[i].setPendingAdditionToFalse();
 								}
 							}
 						}

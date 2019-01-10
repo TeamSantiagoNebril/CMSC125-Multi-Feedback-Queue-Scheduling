@@ -6,8 +6,6 @@ import utility.Block;
 
 public class RR extends SchedulingAlgorithm{
 	
-	private ProcessControlBlock addProcess;
-	
 	public RR(int timeSlice) {
 		super();
 		currentCounter = 0;
@@ -39,6 +37,7 @@ public class RR extends SchedulingAlgorithm{
 			currentCounter++;
 		}
 		if(r.getBurstTime() == 0) { //process has not used up its alloted time yet and burst time is zero
+			
 			processQueue.remove(0);
 			currentCounter = 0;
 			newRP = true;
@@ -46,7 +45,8 @@ public class RR extends SchedulingAlgorithm{
 		if(currentCounter == timeSlice) {
 			currentCounter = 0;
 
-			if(processQueue.size() == 1) {
+			if(!isEmptyQueue() && !newRP) {
+				
 				int PID = processQueue.get(0).getPID();
 				ProcessControlBlock ee = processQueue.remove(0);
 				addProcess = ee;
@@ -57,7 +57,8 @@ public class RR extends SchedulingAlgorithm{
 				}else {
 					newRP = true;
 				}
-			}else if(!isEmptyQueue() && !newRP) {
+			}/*else if(!isEmptyQueue() && !newRP) {
+				System.out.println("wawaw");
 				int PID = processQueue.get(0).getPID();
 				ProcessControlBlock ee = processQueue.remove(0);
 				processQueue.add(ee);
@@ -67,7 +68,7 @@ public class RR extends SchedulingAlgorithm{
 				}else {
 					newRP = true;
 				}
-			}
+			}*/
 		}
 		return r;
 	}
