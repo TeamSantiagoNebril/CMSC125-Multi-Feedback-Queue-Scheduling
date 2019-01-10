@@ -11,11 +11,18 @@ public class SchedulingAlgorithm {
 	protected ProcessControlBlock previousProcess;
 	protected int ppIndex;
 	protected int previousPID;
+	protected boolean pendingAddition;
 	
 	public SchedulingAlgorithm() {
 		ppIndex = -1;
 		processQueue = new ArrayList<ProcessControlBlock>();
 		newRP = true;
+	}
+	
+	public boolean hasPendingAddition() {
+		boolean temp = pendingAddition;
+		pendingAddition = false;
+		return temp;
 	}
 	
 	public ArrayList<ProcessControlBlock> getsQueue() {

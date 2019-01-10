@@ -68,6 +68,7 @@ public class MLFQ extends Thread{
 		int previousRunQueue = -1;
 		boolean preempted = false;
 		int a = 0;
+		
 		if(prioPolicy == 0) { //Higher Before Lower
 			
 			while(true) {
@@ -77,7 +78,10 @@ public class MLFQ extends Thread{
 				}
 				
 				a++;
-
+				
+				System.out.println("Loop #" + a);
+				
+				
 				MLFQSimulatorGUI.addLabel(time);
 				
 				ProcessControlBlock output = null;
@@ -86,6 +90,8 @@ public class MLFQ extends Thread{
 					if(!mlfQueues[i].isEmptyQueue()) {
 						output = mlfQueues[i].executeScheduling();
 						
+						
+						//start of promotion
 						if(previousRunQueue > i && preempted){
 							mlfQueues[previousRunQueue - 1].addProcess(mlfQueues[previousRunQueue].removeFirstProcess());
 						}
@@ -99,6 +105,12 @@ public class MLFQ extends Thread{
 						}
 						
 						previousRunQueue = i;
+						//end of promotion
+						
+						/*
+						 * PROMOTION IDEA
+						 * If a process is preempted, it will be promoted
+						 */
 						
 						performanceChart.addGTElement(output.getPID(), time);
 						
@@ -121,7 +133,16 @@ public class MLFQ extends Thread{
 				}
 				
 				time++;
+				
+				for(int z = 0 ; z < mlfQueues.length; z++) {
+					if(mlfQueues[z].isEmptyQueue()) {
+						System.out.println(z + " : empty");
+					}
+				}
+				
+				
 				if(checkifShouldEND()) {
+					
 					MLFQSimulatorGUI.addLabel(time);
 					break;
 				}
@@ -208,10 +229,12 @@ public class MLFQ extends Thread{
 						i = 0;
 					}
 				}
+				
 				if(checkifShouldEND()){
 					MLFQSimulatorGUI.addLabel(time);
 					break;
 				}
+				
 			}
 		}
 		performanceChart.closeCurrentGantt(); 
@@ -226,7 +249,12 @@ public class MLFQ extends Thread{
 		if(processes.size() > 0) {
 			phase1 = true;
 		}
+		
 		for(int i = 0; i < mlfQueues.length; i++) {
+			if(schedAlgo[i] == 6 && mlfQueues[i].hasPendingAddition()) {
+				phase2 = false;
+			}
+			
 			if(mlfQueues[i].isEmptyQueue() == false) {
 				phase2 =  false;
 			}

@@ -6,7 +6,6 @@ import utility.Block;
 
 public class RR extends SchedulingAlgorithm{
 	
-	private boolean toAddProcessFlag = false;
 	private ProcessControlBlock addProcess;
 	
 	public RR(int timeSlice) {
@@ -14,7 +13,6 @@ public class RR extends SchedulingAlgorithm{
 		currentCounter = 0;
 		this.timeSlice = timeSlice;
 	}
-	
 	
 	@Override
 	public void addProcess(ProcessControlBlock e) {
@@ -27,20 +25,20 @@ public class RR extends SchedulingAlgorithm{
 		ProcessControlBlock r = null;
 		r = processQueue.get(0);
 		
-		if(toAddProcessFlag){
+		if(pendingAddition){
 			processQueue.add(addProcess);
 		}
 		
-		toAddProcessFlag = false;
-
+		pendingAddition = false;
+		
 		MLFQSimulatorGUI.addBlock(new Block(processQueue.get(0).getPID()));
-		if(r.getBurstTime() > 0) { //is executed when the process has not used up its alloted time yet and burst time is not yet zero
+		if(r.getBurstTime() > 0) { //process has not used up its alloted time yet and burst time is not yet zero
 			processQueue.get(0).decBurstTime();
 			newRP = false;
 			ppIndex = -1;
 			currentCounter++;
 		}
-		if(r.getBurstTime() == 0) { //is executed when the process has not used up its alloted time yet and burst time is zero
+		if(r.getBurstTime() == 0) { //process has not used up its alloted time yet and burst time is zero
 			processQueue.remove(0);
 			currentCounter = 0;
 			newRP = true;
@@ -48,18 +46,18 @@ public class RR extends SchedulingAlgorithm{
 		if(currentCounter == timeSlice) {
 			currentCounter = 0;
 
-			if(!isEmptyQueue() && !newRP) {
+			if(processQueue.size() == 1) {
 				int PID = processQueue.get(0).getPID();
 				ProcessControlBlock ee = processQueue.remove(0);
 				addProcess = ee;
-				toAddProcessFlag = true;
+				pendingAddition = true;
 				ppIndex = processQueue.size()-1;
 				if(PID == r.getPID()) {
 					newRP = false;
 				}else {
 					newRP = true;
 				}
-			}/*else if(!isEmptyQueue() && !newRP) {
+			}else if(!isEmptyQueue() && !newRP) {
 				int PID = processQueue.get(0).getPID();
 				ProcessControlBlock ee = processQueue.remove(0);
 				processQueue.add(ee);
@@ -69,10 +67,8 @@ public class RR extends SchedulingAlgorithm{
 				}else {
 					newRP = true;
 				}
-			}*/
+			}
 		}
 		return r;
 	}
-	
-	
 }
